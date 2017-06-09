@@ -748,6 +748,7 @@
     <Compile Include="Controllers\MCategoryController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\WishController.cs" />
     <Compile Include="Filters\CheckLoginAttribute.cs" />
     <Compile Include="Helpers\CurrentContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -756,6 +757,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Helpers\StringUtils.cs" />
+    <Compile Include="Helpers\Wishlist.cs" />
     <Compile Include="Models\Auction.cs">
       <DependentUpon>QLLDauGia.tt</DependentUpon>
     </Compile>
@@ -826,6 +828,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\Wish\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

@@ -39,6 +39,17 @@ namespace DoAn_Auction.Helpers
         {
             return (User)HttpContext.Current.Session["user"];
         }
+        public static Wishlist GetWishlist()
+        {
+            var ret = (Wishlist)HttpContext.Current.Session["wishlist"];
+            if (ret != null)
+            {
+                return ret;
+            }
+            ret = new Wishlist();
+            HttpContext.Current.Session["wishlist"] = ret;
+            return ret;
+        }
         public static void Destroy()
         {
             HttpContext.Current.Session["isLogin"] = 0;

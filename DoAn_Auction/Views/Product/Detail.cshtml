@@ -11,7 +11,6 @@
     <link href="~/assets/css/owl.carousel.css" rel="stylesheet" />
     <link href="~/assets/css/owl.theme.default.css" rel="stylesheet" />
     <link href="~/assets/css/jquery.bootstrap-touchspin.css" rel="stylesheet" />
-<link href="~/assets/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
 
     <style type="text/css">
     </style>
@@ -25,72 +24,54 @@
     <script src="~/assets/js/jquery.raty-fa.js"></script>
     <script src="~/assets/js/mimity.js"></script>
     <script src="~/assets/js/mimity.detail.js"></script>
-<script src="~/assets/js/bootstrap-table/bootstrap-table.min.js"></script>
-    <script src="~/assets/js/table-paging.js"></script>
-    @*<script src="~/assets/js/elevate/jquery-1.8.3.min.js"></script>
-        <script src="~/assets/js/elevate/jquery.elevatezoom.js"></script>*@
-    @*<script src="~/assets/js/behavior_legacy.js"></script>*@
-    @*<script type="text/javascript">
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-28871117-1']);
-            _gaq.push(['_setDomainName', 'wrapbootstrap.com']);
-            _gaq.push(['_trackPageview']);
-            (function () {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>*@
-
-    @*<script src="~/assets/js/behavior_legacy.js"></script>*@
-    @*<script type="text/javascript">
-            var _gaq = _gaq || [];
-            _gaq.push(['_setAccount', 'UA-28871117-1']);
-            _gaq.push(['_setDomainName', 'wrapbootstrap.com']);
-            _gaq.push(['_trackPageview']);
-            (function () {
-                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-            })();
-        </script>*@
-    @*<script>
-            $(document).ready(function () {
-                function fix_height() {
-                    var h = $("#tray").height();
-                    $("#preview").attr("height", (($(window).height()) - h) + "px");
-                }
-                $(window).resize(function () { fix_height(); }).resize();
-                $("#preview").contentWindow.focus();
-            });
-        </script>*@
-
-    <script>
-        $('#txtPriceSet').TouchSpin({
-            verticalbuttons: true,
-            min: @Model.PriceCurrent+@Model.Step,
-            max: 1000000000,
-            step: @Model.Step,
-            initval: 20000,
-            postfix: 'VNĐ'
-        });
-        
-
-    </script>
-
-
-
-@*<script>
-    var pager = new Pager('results',1);
-    pager.init();
-    pager.showPageNav('pager', 'pageNavPosition');
-    pager.showPage(2);
+@*<script src="~/assets/js/elevate/jquery-1.8.3.min.js"></script>
+<script src="~/assets/js/elevate/jquery.elevatezoom.js"></script>*@
+@*<script src="~/assets/js/behavior_legacy.js"></script>*@
+@*<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-28871117-1']);
+    _gaq.push(['_setDomainName', 'wrapbootstrap.com']);
+    _gaq.push(['_trackPageview']);
+    (function () {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
 </script>*@
 
+    @*<script src="~/assets/js/behavior_legacy.js"></script>*@
+    @*<script type="text/javascript">
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-28871117-1']);
+        _gaq.push(['_setDomainName', 'wrapbootstrap.com']);
+        _gaq.push(['_trackPageview']);
+        (function () {
+            var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+        })();
+    </script>*@
+@*<script>
+    $(document).ready(function () {
+        function fix_height() {
+            var h = $("#tray").height();
+            $("#preview").attr("height", (($(window).height()) - h) + "px");
+        }
+        $(window).resize(function () { fix_height(); }).resize();
+        $("#preview").contentWindow.focus();
+    });
+</script>*@
 
-
-
-
+<script>
+    $('#txtPriceSet').TouchSpin({
+        verticalbuttons: true,
+        min: @Model.PriceCurrent+@Model.Step,
+        max: 1000000000,
+        step: @Model.Step,
+        initval: 20000,
+        postfix: 'VNĐ'
+    });
+</script>
 
 
 
@@ -129,11 +110,11 @@
                     }
 
                 }
-
+                
                 @*<a href="#"><img src="images/demo/p1-2.jpg" data-zoom-image="images/demo/p1-large-2.jpg" alt="" class="img-thumbnail"></a>
-                    <a href="#"><img src="images/demo/p1-3.jpg" data-zoom-image="images/demo/p1-large-3.jpg" alt="" class="img-thumbnail"></a>
-                    <a href="#"><img src="images/demo/p1-4.jpg" data-zoom-image="images/demo/p1-large-4.jpg" alt="" class="img-thumbnail"></a>
-                    <a href="#"><img src="images/demo/p1-1.jpg" data-zoom-image="images/demo/p1-large-1.jpg" alt="" class="img-thumbnail"></a>*@
+                <a href="#"><img src="images/demo/p1-3.jpg" data-zoom-image="images/demo/p1-large-3.jpg" alt="" class="img-thumbnail"></a>
+                <a href="#"><img src="images/demo/p1-4.jpg" data-zoom-image="images/demo/p1-large-4.jpg" alt="" class="img-thumbnail"></a>
+                <a href="#"><img src="images/demo/p1-1.jpg" data-zoom-image="images/demo/p1-large-1.jpg" alt="" class="img-thumbnail"></a>*@
             </div>
             <div class="title"><span>Share to</span></div>
             <div class="share-button m-b-3">
@@ -155,14 +136,14 @@
                     </div>
                 </div>
             }
-            @if (@ViewBag.Success != null)
-            {
-                <div class="form-group">
-                    <div class="alert alert-success">
-                        @ViewBag.Success
-                    </div>
+        @if (@ViewBag.Success != null)
+        {
+            <div class="form-group">
+                <div class="alert alert-success">
+                    @ViewBag.Success
                 </div>
-            }
+            </div>
+        }
             <div class="title-detail">@Model.ProName</div>
             <table class="table table-detail">
                 <tbody>
@@ -170,12 +151,12 @@
                         <td>Price</td>
                         <td>
                             <div class="price">
-                                @if (Model.PriceBuy > 0 && Model.PriceHighest < Model.PriceBuy)
-                                {
-                                    <div><span class="label-tags"><span class="label label-danger arrowed-right">Mua ngay: </span></span> @String.Format("{0:n0}", @Model.PriceBuy) VNĐ</div>
-                                }
+                               @if (Model.PriceBuy > 0 && Model.PriceHighest < Model.PriceBuy)
+                               {
+                                <div><span class="label-tags"><span class="label label-danger arrowed-right">Mua ngay: </span></span> @String.Format("{0:n0}", @Model.PriceBuy) VNĐ</div>
+                               }
                                 <span class="label-tags"><span class="label label-info arrowed-right">Giá hiện tại: </span></span>
-                                @String.Format("{0:n0}", @Model.PriceCurrent) VNĐ
+                                @String.Format("{0:n0}", @Model.PriceCurrent) VNĐ 
                             </div>
                         </td>
                     </tr>
@@ -183,7 +164,7 @@
                         <td>Thời gian bắt đầu</td>
                         <td>
                             <div>
-                                <span>@Model.TimeStart</span>
+                                 <span>@Model.TimeStart</span>
                             </div>
                         </td>
                     </tr>
@@ -195,41 +176,41 @@
                             </div>
                         </td>
                     </tr>
-                    @*<tr>
-                            <td>Quantity</td>
-                            <td>
-                                <div class="input-qty">
-                                    <input type="text" value="1" class="form-control text-center" />
-                                </div>
-                            </td>
+                     @*<tr>
+                        <td>Quantity</td>
+                        <td>
+                            <div class="input-qty">
+                                <input type="text" value="1" class="form-control text-center" />
+                            </div>
+                        </td>
 
-                        </tr>*@
+                    </tr>*@
                     @*<tr>
-                            <td>Size</td>
-                            <td>
-                                <select class="selectpicker" data-width="80px">
-                                    <option value="S">S</option>
-                                    <option value="M">M</option>
-                                    <option value="L">L</option>
-                                    <option value="XL">XL</option>
-                                    <option value="XXL">XXL</option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Checkbox</td>
-                            <td>
-                                <div class="checkbox"><label><input type="checkbox" id="checkbox1"><span> Checkbox 1</span></label></div>
-                                <div class="checkbox"><label><input type="checkbox" id="checkbox2"><span> Checkbox 2</span></label></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Radio</td>
-                            <td>
-                                <div class="radio"><label><input type="radio" name="radio-product" checked="checked"><span>Radio 1</span></label></div>
-                                <div class="radio"><label><input type="radio" name="radio-product"><span>Radio 2</span></label></div>
-                            </td>
-                        </tr>*@
+                        <td>Size</td>
+                        <td>
+                            <select class="selectpicker" data-width="80px">
+                                <option value="S">S</option>
+                                <option value="M">M</option>
+                                <option value="L">L</option>
+                                <option value="XL">XL</option>
+                                <option value="XXL">XXL</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Checkbox</td>
+                        <td>
+                            <div class="checkbox"><label><input type="checkbox" id="checkbox1"><span> Checkbox 1</span></label></div>
+                            <div class="checkbox"><label><input type="checkbox" id="checkbox2"><span> Checkbox 2</span></label></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Radio</td>
+                        <td>
+                            <div class="radio"><label><input type="radio" name="radio-product" checked="checked"><span>Radio 1</span></label></div>
+                            <div class="radio"><label><input type="radio" name="radio-product"><span>Radio 2</span></label></div>
+                        </td>
+                    </tr>*@
                     <tr>
                         <td></td>
                         <td>
@@ -258,19 +239,19 @@
 
                 <!-- Description Tab Content -->
                 <div role="tabpanel" class="tab-pane active" id="desc">
-                    <div class="well">
-                        @Html.Raw(HttpUtility.HtmlDecode(Model.FullDes))
+                    <div class="well"> 
+                            @Html.Raw(HttpUtility.HtmlDecode(Model.FullDes))
                         <p>
                         </p>
                         <hr />
                         @*<h4 class="m-b-2">Đấu giá sản phẩm</h4>
-                            <form role="form">
-                                <div class="form-group input-qty">
-                                    <label for="Name">Giá của bạn</label>
-                                    <input id="txtPriceSet" type="text" value="@Model.PriceCurrent" class="form-control text-center" />
-                                </div>
-                                <button type="submit" class="btn btn-theme">Đấu giá</button>
-                            </form>*@
+                        <form role="form">
+                            <div class="form-group input-qty">
+                                <label for="Name">Giá của bạn</label>
+                                <input id="txtPriceSet" type="text" value="@Model.PriceCurrent" class="form-control text-center" />
+                            </div>
+                            <button type="submit" class="btn btn-theme">Đấu giá</button>
+                        </form>*@
                     </div>
                 </div>
                 <!-- End Description Tab Content -->
@@ -281,103 +262,125 @@
                         <form role="form" method="post">
                             <div class="form-group ">
                                 <label for="txtPriceSet">Giá của bạn</label>
-                                <input type="hidden" value="@Model.ProID" name="ProID" hidden />
-                                <input id="txtPriceSet" type="text" value="@Model.PriceCurrent" class="form-control text-center" name="PriceSet" />
+                                <input type="hidden" value="@Model.ProID" name="ProID" hidden/>
+                                <input id="txtPriceSet" type="text" value="@Model.PriceCurrent" class="form-control text-center" name="PriceSet"/>
                             </div>
                             <button type="submit" class="btn btn-theme">Đấu giá</button>
                         </form>
                     </div>
                 </div>
                 <!-- End Auction Tab Content -->
-                
+                <!-- Auction History Tab Content -->
+                <div role="tabpanel" class="tab-pane" id="auctionhistory">
+                    <div class="well">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Người đấu giá</th>
+                                    <th>Giá đặt</th>
+                                </tr>
+                                @foreach (var ah in ViewBag.AuHis)
+                                { 
+                                <tr>
+                                    <td>@ah.Time</td>
+                                    <td>@ah.UserName</td>
+                                    <td>@ah.Price</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <!-- End Auction History Tab Content -->
                 <!-- Detail Tab Content -->
                 @*<div role="tabpanel" class="tab-pane" id="detail">
-                        <div class="well">
-                            <table class="table table-bordered">
-                                <tbody>
-                                    <tr>
-                                        <td>Lorem</td>
-                                        <td>Ipsum</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Dolor</td>
-                                        <td>Sit Amet</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Consectetur</td>
-                                        <td>Adipisicing</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Excepteur</td>
-                                        <td>Occaecat</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>*@
+                    <div class="well">
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <td>Lorem</td>
+                                    <td>Ipsum</td>
+                                </tr>
+                                <tr>
+                                    <td>Dolor</td>
+                                    <td>Sit Amet</td>
+                                </tr>
+                                <tr>
+                                    <td>Consectetur</td>
+                                    <td>Adipisicing</td>
+                                </tr>
+                                <tr>
+                                    <td>Excepteur</td>
+                                    <td>Occaecat</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>*@
                 <!-- End Detail Tab Content -->
                 <!-- Review Tab Content -->
                 @*<div role="tabpanel" class="tab-pane" id="review">
-                        <div class="well">
-                            <div class="media">
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img class="media-object img-thumbnail" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZWVlIi8+PHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9zdmc+">
-                                    </a>
-                                    <div class="product-rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                    </div>
-                                </div>
-                                <div class="media-body">
-                                    <h5 class="media-heading"><strong>John Thor</strong></h5>
-                                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                    <div class="well">
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object img-thumbnail" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZWVlIi8+PHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9zdmc+">
+                                </a>
+                                <div class="product-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
                                 </div>
                             </div>
-                            <div class="media">
-                                <div class="media-left">
-                                    <a href="#">
-                                        <img class="media-object img-thumbnail" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZWVlIi8+PHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9zdmc+">
-                                    </a>
-                                    <div class="product-rating">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-half-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                    </div>
-                                </div>
-                                <div class="media-body">
-                                    <h5 class="media-heading"><strong>Michael</strong></h5>
-                                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
-                                </div>
+                            <div class="media-body">
+                                <h5 class="media-heading"><strong>John Thor</strong></h5>
+                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
                             </div>
-                            <hr />
-                            <h4 class="m-b-2">Add your review</h4>
-                            <form role="form">
-                                <div class="form-group">
-                                    <label for="Name">Name</label>
-                                    <input type="text" id="Name" class="form-control" placeholder="Name">
-                                </div>
-                                <div class="form-group">
-                                    <label for="Email">Email</label>
-                                    <input type="text" id="Email" class="form-control" placeholder="Email">
-                                </div>
-                                <div class="form-group">
-                                    <label>Rating</label><div class="clearfix"></div>
-                                    <div class="input-rating"></div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="Review">Your Review</label>
-                                    <textarea id="Review" class="form-control" rows="5" placeholder="Your Review"></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-theme">Submit Review</button>
-                            </form>
                         </div>
-                    </div>*@
+                        <div class="media">
+                            <div class="media-left">
+                                <a href="#">
+                                    <img class="media-object img-thumbnail" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZWVlIi8+PHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9zdmc+">
+                                </a>
+                                <div class="product-rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                    <i class="fa fa-star-o"></i>
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                <h5 class="media-heading"><strong>Michael</strong></h5>
+                                Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                            </div>
+                        </div>
+                        <hr />
+                        <h4 class="m-b-2">Add your review</h4>
+                        <form role="form">
+                            <div class="form-group">
+                                <label for="Name">Name</label>
+                                <input type="text" id="Name" class="form-control" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="Email">Email</label>
+                                <input type="text" id="Email" class="form-control" placeholder="Email">
+                            </div>
+                            <div class="form-group">
+                                <label>Rating</label><div class="clearfix"></div>
+                                <div class="input-rating"></div>
+                            </div>
+                            <div class="form-group">
+                                <label for="Review">Your Review</label>
+                                <textarea id="Review" class="form-control" rows="5" placeholder="Your Review"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-theme">Submit Review</button>
+                        </form>
+                    </div>
+                </div>*@
                 <!-- End Review Tab Content -->
 
             </div>

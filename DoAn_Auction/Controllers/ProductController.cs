@@ -49,7 +49,7 @@ namespace DoAn_Auction.Controllers
         }
 
         // GET: Product/Detail
-        public ActionResult Detail(int? id)
+        public ActionResult Detail(int? id,int page=1)
         {
             if (id.HasValue == false)
             {
@@ -64,34 +64,35 @@ namespace DoAn_Auction.Controllers
                     .FirstOrDefault();
                 var result = from u in ctx.Users
                              join ah in ctx.AuctionHistories on u.f_ID equals ah.UserID
-                             where ah.ProID==id && ah.Status==true
+                             where ah.ProID==id
                              //into g
                              select new AuctionHistoryVM
                              {
-                                 ProID=ah.ProID,UserID=ah.UserID,Time=ah.Time,UserName=u.f_Name,Price=ah.Price,
+                                 Time=ah.Time,UserName=u.f_Name,Price=ah.Price,
                              };
-                //int n = result.Count();
+                int n = result.Count();
 
-                //int RecordPerPage = 8;
+                int RecordPerPage = 8;
 
-                //int nPages = n / RecordPerPage;
+                int nPages = n / RecordPerPage;
 
-                //int m = n % RecordPerPage;
-                //if (m > 0)
-                //{
-                //    nPages++;
-                //}
+                int m = n % RecordPerPage;
+                if (m > 0)
+                {
+                    nPages++;
+                }
 
-                //ViewBag.Pages = nPages;
+                ViewBag.Pages = nPages;
 
-                //ViewBag.CurPage = page;
+                ViewBag.CurPage = page;
 
                 //var list = ctx.Auctions
                 //    .OrderBy(p => p.ProID)
                 //    .Skip((page - 1) * RecordPerPage)
                 //    .Take(RecordPerPage)
                 //    .ToList();
-                ViewBag.AuHis = result.ToList();
+                ViewBag.AuHis = result.Skip((page - 1) * RecordPerPage)
+                    .Take(RecordPerPage).ToList();
                 return View(model);
             }
         }
@@ -106,19 +107,6 @@ namespace DoAn_Auction.Controllers
                 var model = ctx.Auctions
                     .Where(p => p.ProID == ProID)
                     .FirstOrDefault();
-
-                var result = from u in ctx.Users
-                             join ah in ctx.AuctionHistories on u.f_ID equals ah.UserID
-                             where ah.ProID == ProID && ah.Status==true
-                             //into g
-                             select new AuctionHistoryVM
-                             {
-                                 ProID=ah.ProID,
-                                 UserID=ah.UserID,
-                                 Time = ah.Time,
-                                 UserName = u.f_Name,
-                                 Price = ah.Price,
-                             };
                 if (uPriceSet > model.PriceHighest)
                 {
                     model.PriceCurrent = model.PriceHighest + model.Step;
@@ -129,66 +117,37 @@ namespace DoAn_Auction.Controllers
                     var auHis = new AuctionHistory
                     {
                         ProID = model.ProID,
-                        UserID = 3,
-                        Price = model.PriceCurrent,
+                        UserID = 1,
+                        Price = model.PriceCurrent - +model.Step,
                         Time=DateTime.Now,
-                        Status=true,
                     };
                     ctx.AuctionHistories.Add(auHis);
                     ctx.SaveChanges();
-                    ViewBag.AuHis = result.ToList();
                     return View(model);
                 }
                 else
                 {
-                    if (uPriceSet == model.PriceHighest)
+                    if(uPriceSet > model.PriceCurrent)
                     {
-                        model.PriceCurrent = uPriceSet;
+                        model.PriceCurrent = uPriceSet + model.Step;
                         ctx.Entry(model).State = System.Data.Entity.EntityState.Modified;
                         ctx.SaveChanges();
-                        ViewBag.ErrorMsg = "Đã có người đặt giá trước bạn bạn ! Vui lòng đặt giá khác";
+                        ViewBag.ErrorMsg = "Đã có người đặt giá cao hơn bạn ! Vui lòng đặt giá khác";
                         var auHis = new AuctionHistory
                         {
                             ProID = model.ProID,
                             UserID = 3,
-                            Price = model.PriceCurrent,
+                            Price = model.PriceCurrent - +model.Step,
                             Time = DateTime.Now,
-                            Status = true,
                         };
                         ctx.AuctionHistories.Add(auHis);
                         ctx.SaveChanges();
-                        ViewBag.AuHis = result.ToList();
                         return View(model);
-
-                    }
-                    else
-                    {
-                        if (uPriceSet > model.PriceCurrent)
-                        {
-                            model.PriceCurrent = uPriceSet + model.Step;
-                            ctx.Entry(model).State = System.Data.Entity.EntityState.Modified;
-                            ctx.SaveChanges();
-                            ViewBag.ErrorMsg = "Đã có người đặt giá cao hơn bạn ! Vui lòng đặt giá khác";
-                            var auHis = new AuctionHistory
-                            {
-                                ProID = model.ProID,
-                                UserID = 3,
-                                Price = model.PriceCurrent,
-                                Time = DateTime.Now,
-                                Status = true,
-                            };
-                            ctx.AuctionHistories.Add(auHis);
-                            ctx.SaveChanges();
-                            ViewBag.AuHis = result.ToList();
-                            return View(model);
-                        }
                     }
                 }
 
-                ViewBag.AuHis = result.ToList();
                 return View(model);
             }
         } 
-
     }
 }
