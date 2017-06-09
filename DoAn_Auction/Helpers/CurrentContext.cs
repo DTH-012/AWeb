@@ -13,8 +13,8 @@ namespace DoAn_Auction.Helpers
             var flag = HttpContext.Current.Session["isLogin"];
             if (flag == null || (int)flag == 0)
             {
-                //Kiểm tra thêm thông tin trong cookies
-                //nếu có dùng thông tin trong cookies
+                //Kiểm tra thêm thông tin trong cookie
+                //nếu có dùng thông tin trong cookie
                 //để tái tạo lại session
                 if(HttpContext.Current.Request.Cookies["userID"]!=null)
                 {
