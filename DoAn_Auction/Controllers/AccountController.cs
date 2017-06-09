@@ -85,5 +85,48 @@ namespace DoAn_Auction.Controllers
                 return check;
             }
         }
+
+	// POST: Account/Login
+        [HttpPost]
+        public ActionResult Login(LoginVM model)
+        {
+            using (var ctx = new QLDauGiaEntities())
+            {
+                if(model.RawPWD==null || model.Username==null)
+                {
+                    TempData["ErrorMsg"] = "Đăng nhập không thành công";
+                    return RedirectToAction("Register", "Account");
+                }
+                string encPwd = StringUtils.MD5(model.RawPWD);
+                var user = ctx.Users
+                    .Where(u => u.f_Username == model.Username && u.f_Password == encPwd)
+                    .FirstOrDefault();
+                if (user != null)
+                {
+                    Session["isLogin"] = 1;
+                    Session["user"] = user;
+
+                    if(model.Remember)
+                    {
+                        Response.Cookies["userID"].Value = user.f_ID.ToString();
+                        Response.Cookies["userID"].Expires = DateTime.Now.AddDays(7);
+                    }
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    TempData["ErrorMsg"] = "Đăng nhập không thành công";
+                    return RedirectToAction("Register", "Account");
+                }
+            }
+        }
+
+        // POST: Account/Logout
+        [HttpPost]
+        public ActionResult Logout()
+        {
+            CurrentContext.Destroy();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
