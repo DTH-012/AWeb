@@ -186,6 +186,7 @@ namespace DoAn_Auction.Controllers
                 }
 
                 ViewBag.AuHis = result.ToList();
+				//fix commit @@
                 return View(model);
             }
         } 
