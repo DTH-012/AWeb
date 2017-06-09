@@ -146,6 +146,11 @@ namespace DoAn_Auction.Controllers
                     }
                 }
 
+<<<<<<< HEAD
+=======
+                ViewBag.AuHis = result.ToList();
+				//fix commit @@
+>>>>>>> 86c2df32402a5cacdc58e824ffcfaf090b84125a
                 return View(model);
             }
         } 
