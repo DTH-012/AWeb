@@ -51,6 +51,7 @@
                         <li class="hidden-xs"><a href="mailto:cs@domain.tld"><i class="fa fa-envelope"></i> cs@domain.tld</a></li>
                     </ul>
                     <ul class="list-inline pull-right">
+			//Login
                         @if (CurrentContext.IsLogged() == false)
                         { 
                         <li>
@@ -434,6 +435,7 @@
     <script src="~/assets/js/jquery.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="~/assets/bootstrap/js/bootstrap.js"></script>
+//Logut Script
     <script type="text/javascript">
         $('#logoutLink').on('click', function() {
             $('#frmLogout').submit();
