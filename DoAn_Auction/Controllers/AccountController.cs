@@ -19,6 +19,7 @@ namespace DoAn_Auction.Controllers
             return View();
         }
 
+	//Re-up github
         // POST: Account/Register
         [HttpPost]
         [CaptchaValidation("CaptchaCode", "ExampleCaptcha", "Incorrect CAPTCHA code!")]

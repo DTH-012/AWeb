@@ -69,11 +69,7 @@
             }
         }, "Email đã tồn tại");
         $('#frmRegister').validate({
-            //highlight: function (element) {
-            //    var id_attr = "#" + $(element).attr("id") + "1";
-            //    $(element).closest('.form-group').addClass('has-error');
-            //    $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
-            //},
+            
             highlight: function (element) {
                 //var id_attr = "#" + $(element).attr("id") + "1";
                 $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
