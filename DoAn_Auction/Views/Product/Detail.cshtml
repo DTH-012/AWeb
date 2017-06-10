@@ -71,6 +71,47 @@
         initval: 20000,
         postfix: 'VNĐ'
     });
+	$('#myTable').on('click', '.kickLink', function () {
+            var proid = $(this).data('proid');
+            var userid = $(this).data('userid');
+            var params={"ProID":proid,"KUserID":userid};
+            var url = '/Product/KickUser/';
+            //var urla=Url.Action("Index", "Equipment",new{ProID=proid,KUserID=userid});
+            var cfr = confirm("Người này sẽ không thể tiếp tục đấu giá trên sản phẩm này!");
+            if (cfr == true) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data:params,
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            location.reload();
+                        }
+                    });
+            }
+            else {
+                alert("You pressed Cancel!");
+            }
+            //$('#frmKick').submit();
+            //var proid = $(this).data('proid');
+            //var userid = $(this).data('userid');
+            //var url = '/Product/KickUser/?ProID=' +ProID+'?KUserID='+UserID;
+            //var r = confirm("Press a button!");
+            //if (r == true) {
+            //    //$.ajax({
+            //    //    type: 'POST',
+            //    //    url: url,
+            //    //    async: false,
+            //    //    success: function (data) {
+            //    //        console.log(data);
+            //    //    }
+            //    //});
+            //}
+            //else {
+            //    alert("You pressed Cancel!");
+            //}
+        });
 </script>
 
 
@@ -228,8 +269,11 @@
             <!-- Nav tabs -->
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#desc" aria-controls="desc" role="tab" data-toggle="tab">Mô tả</a></li>
+                @if (CurrentContext.IsLogged() == true )
+                { 
                 <li role="presentation"><a href="#auction" aria-controls="auction" role="tab" data-toggle="tab">Đấu giá</a></li>
                 <li role="presentation"><a href="#auctionhistory" aria-controls="auctionhistory" role="tab" data-toggle="tab">Lịch sử đấu giá</a></li>
+                }
                 @*<li role="presentation"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">Detail</a></li>*@
                 @*<li role="presentation"><a href="#review" aria-controls="review" role="tab" data-toggle="tab">Reviews (2)</a></li>*@
             </ul>
@@ -286,6 +330,17 @@
                                     <td>@ah.Time</td>
                                     <td>@ah.UserName</td>
                                     <td>@ah.Price</td>
+									@if (CurrentContext.IsLogged() == true )
+                                    {
+                                        if(CurrentContext.GetCurUser().f_ID==Model.Seller)
+                                        {
+                                        <td class="action text-center">
+                                            <a id="kickLink" href="javascript:;" class="text-danger kickLink"
+                                               data-toggle="tooltip" data-placement="top" data-original-title="Kick người chơi"
+                                               data-proid="@ah.ProID" data-userid="@ah.UserID"><i class="fa fa-user-times"></i></a>
+                                        </td>
+                                        }
+                                    }
                                 </tr>
                                 }
                             </tbody>
