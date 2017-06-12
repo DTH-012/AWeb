@@ -1,4 +1,6 @@
-﻿using DoAn_Auction.Models;
+﻿using DoAn_Auction.Filters;
+using DoAn_Auction.Models;
+using DoAn_Auction.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Imaging;
@@ -13,9 +15,20 @@ namespace DoAn_Auction.Controllers
     public class AuctionController : Controller
     {
         // GET: Auction/Add
+        [CheckLogin]
         public ActionResult Add()
         {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
             QLDauGiaEntities ctx = new QLDauGiaEntities();
+            int UserID = CurrentContext.GetCurUser().f_ID;
+            var CheckSelling = ctx.RegisterSellings.Where(p => p.Status == 1 && p.UserID == UserID).FirstOrDefault();
+            if (CheckSelling!=null)
+            {
+                ViewBag.CheckSelling = "1";
+            }
             ViewBag.Parent = ctx.Categories
                     .Where(c => c.ParentID == 0).ToList();
             return View();
@@ -26,6 +39,11 @@ namespace DoAn_Auction.Controllers
         //Quan trọng: upload picture, form bên view phải có encytype
         public ActionResult Add(AuctionVM avm, HttpPostedFileBase mainPic, IEnumerable<HttpPostedFileBase> subPic)
         {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int UserID = CurrentContext.GetCurUser().f_ID;
             QLDauGiaEntities ctx = new QLDauGiaEntities();
             ViewBag.Parent = ctx.Categories
                     .Where(c => c.ParentID == 0).ToList();
@@ -41,11 +59,11 @@ namespace DoAn_Auction.Controllers
                 Customer = 0,
                 TimeStart = DateTime.Now,
                 TimeEnd = DateTime.Now.AddDays(avm.TimeEnd),
-                Adjourning = false,
+                Adjourning = avm.Adjourning,
                 Status = true,
                 Required = avm.Required,
                 Step = avm.Step,
-                Seller = 1,
+                Seller = UserID,
                 PriceCurrent = avm.PriceStarting,
             };
 
@@ -208,6 +226,24 @@ namespace DoAn_Auction.Controllers
                 ViewBag.ErrorMsg = "ko thành công";
             }
             return View();
+        }
+
+
+        // POST: Auction/RegisterSelling
+        [HttpPost]
+        public ActionResult RegisterSelling()
+        {
+            QLDauGiaEntities ctx = new QLDauGiaEntities();
+            var rs = new RegisterSelling
+            {
+                UserID=CurrentContext.GetCurUser().f_ID,
+                DateStart=null,
+                DateEnd=null,
+                Status=1,
+            };
+            ctx.RegisterSellings.Add(rs);
+            ctx.SaveChanges();
+            return RedirectToAction("Add","Auction");
         }
     }
 }
