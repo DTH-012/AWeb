@@ -49,6 +49,7 @@ namespace DoAn_Auction.Controllers
         }
 
         // GET: Product/Detail
+		//Commit loi - Reup
         public ActionResult Detail(int? id,int page=1)
         {
             if (id.HasValue == false)
