@@ -271,7 +271,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li role="presentation" class="active"><a href="#desc" aria-controls="desc" role="tab" data-toggle="tab">Mô tả</a></li>
                 @if (CurrentContext.IsLogged() == true )
-                { 
+                    { 
                 <li role="presentation"><a href="#auction" aria-controls="auction" role="tab" data-toggle="tab">Đấu giá</a></li>
                 <li role="presentation"><a href="#auctionhistory" aria-controls="auctionhistory" role="tab" data-toggle="tab">Lịch sử đấu giá</a></li>
                 }
@@ -319,19 +319,28 @@
                 <div role="tabpanel" class="tab-pane" id="auctionhistory">
                     <div class="well">
                         <table class="table table-bordered">
-                            <tbody>
+                            <thead>
                                 <tr>
-                                    <th>Thời gian</th>
+                                    <th>Thời gian đặt giá</th>
                                     <th>Người đấu giá</th>
                                     <th>Giá đặt</th>
+                                    @if (CurrentContext.IsLogged() == true )
+                                    { 
+                                        if(CurrentContext.GetCurUser().f_ID==Model.Seller)
+                                        {
+                                        <th class="text-center">Action</th>
+                                        }
+                                    }
                                 </tr>
+                            </thead>
+                            <tbody id="myTable">
                                 @foreach (var ah in ViewBag.AuHis)
-                                { 
+                                {
                                 <tr>
                                     <td>@ah.Time</td>
                                     <td>@ah.UserName</td>
                                     <td>@ah.Price</td>
-									@if (CurrentContext.IsLogged() == true )
+                                    @if (CurrentContext.IsLogged() == true )
                                     {
                                         if(CurrentContext.GetCurUser().f_ID==Model.Seller)
                                         {
@@ -345,7 +354,35 @@
                                 </tr>
                                 }
                             </tbody>
-                        </table>
+                        </table> 
+                        <form id="frmKick" method="post" action="@Url.Action("KickUser","Auction")"></form>
+                        @*<div class="col-md-12 text-center">
+                            <ul class="pagination" id="myPager"></ul>
+                        </div>*@
+                        @*<table id="results" class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Người đấu giá</th>
+                                    <th>Giá đặt</th>
+                                </tr>
+                                @foreach (var ah in ViewBag.AuHis)
+                                {
+                                    <tr>
+                                        <td>ah.Time</td>
+                                        <td>ah.UserName</td>
+                                        <td>ah.Price</td>
+                                    </tr>
+                                <tr>
+                                    <td>ah.Time</td>
+                                    <td>ah.UserName</td>
+                                    <td>ah.Price</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>*@
+                        @*<div id="pageNavPosition" class="pagination"></div>*@
+                        
                     </div>
                 </div>
                 <!-- End Auction History Tab Content -->

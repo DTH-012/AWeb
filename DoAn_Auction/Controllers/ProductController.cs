@@ -87,11 +87,6 @@ namespace DoAn_Auction.Controllers
 
                 ViewBag.CurPage = page;
 
-                //var list = ctx.Auctions
-                //    .OrderBy(p => p.ProID)
-                //    .Skip((page - 1) * RecordPerPage)
-                //    .Take(RecordPerPage)
-                //    .ToList();
                 ViewBag.AuHis = result.Skip((page - 1) * RecordPerPage)
                     .Take(RecordPerPage).ToList();
                 return View(model);
