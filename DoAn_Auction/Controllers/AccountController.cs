@@ -169,5 +169,22 @@ namespace DoAn_Auction.Controllers
                 return View(dsSp);
             }
         }
+		
+        // GET: Account/BidWin
+        [CheckLogin]
+        public ActionResult BidWin()
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Auctions
+                    .Where(p => p.Customer == ID && p.Status == false).ToList();
+                return View(model);
+            }
+        }
     }
 }
