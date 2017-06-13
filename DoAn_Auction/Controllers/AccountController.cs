@@ -128,5 +128,46 @@ namespace DoAn_Auction.Controllers
             CurrentContext.Destroy();
             return RedirectToAction("Index", "Home");
         }
+		// GET: Account/Bidding
+        [CheckLogin]
+        public ActionResult Bidding()
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var result = ctx.AuctionHistories
+                    .Where(p => p.UserID == ID)
+                    .Select(p => p.ProID)
+                    .Distinct().ToList();
+                var proID = new List<int>();
+                var dsSp = new List<Auction>();
+                foreach(var p in result)
+                {
+                    proID.Add(p);
+                    var pro = ctx.Auctions.Where(a => a.ProID == p).FirstOrDefault();
+                    dsSp.Add(pro);
+                }
+                ViewBag.ProID = proID;
+                //var result = from a in ctx.Auctions
+                //              join ah in ctx.AuctionHistories on a.ProID equals ah.ProID
+                //              where ah.UserID == ID
+                //              group a by a.ProID into a
+                //              //into g
+                //              select a;
+                //var auhis = ctx.AuctionHistories.Where(p => p.UserID == ID).OrderBy(p => p.ProID).ToList();
+                //ViewBag.ProBid =result.ToList();
+                //var model = ctx.AuctionHistories.Where(p => p.UserID == ID).GroupBy(p=>p.ProID).ToList();
+                //var list = new List<Auction>();
+                //foreach (var p in result.ToList())
+                //{
+                //    list.Add(p);
+                //}
+                return View(dsSp);
+            }
+        }
     }
 }
