@@ -317,5 +317,51 @@ namespace DoAn_Auction.Controllers
                 return Json(JsonRequestBehavior.AllowGet);
             }
         }
+		
+		// GET: Account/YourCustomer
+        [CheckLogin]
+        public ActionResult YourCustomer()
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Auctions
+                    .Where(p => p.Seller == ID && p.Status == false && p.Customer!=0).ToList();
+                return View(model);
+            }
+        }
+        // GET: Account/YourCustomer
+        //Review
+        [HttpPost]
+        public ActionResult YourCustomer(Review r)
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var receiver = ctx.Users.Where(u => u.f_ID == r.Receiver).FirstOrDefault();
+                if (r.Type == true)
+                {
+                    receiver.f_Like++;
+                }
+                else if (r.Type == false)
+                {
+                    receiver.f_Dislike++;
+                }
+                ctx.Reviews.Add(r);
+                ctx.Entry(receiver).State = System.Data.Entity.EntityState.Modified;
+                ctx.SaveChanges();
+                var model = ctx.Auctions
+                    .Where(p => p.Seller == ID && p.Status == false && p.Customer != 0).ToList();
+                return View(model);
+            }
+        }
     }
 }

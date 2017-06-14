@@ -1,0 +1,170 @@
+﻿@using DoAn_Auction.Helpers;
+@using DoAn_Auction.Models;
+@model List<Auction>
+
+@section title
+{
+    Sản phẩm đã có người mua
+}
+@section css
+{
+    <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
+}
+@section js
+{
+    <script src="~/assets/js/bootstrap-select.js"></script>
+    <script src="~/assets/js/mimity.js"></script>
+@foreach (var pro in Model)
+{
+    <script type="text/javascript">
+        $('#@String.Copy("SendComment" + pro.ProID.ToString())').on('click', function () {
+            $('#@String.Copy("frmReview" + pro.ProID.ToString())').submit();
+        });
+    </script>
+}
+}
+<!-- Breadcrumbs -->
+<div class="breadcrumb-container">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">Lịch sử đấu giá</li>
+        </ol>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+<!-- Main Content -->
+<div class="container m-t-3">
+    <div class="row">
+
+        <!-- Account Sidebar -->
+        <div class="col-sm-4 col-md-3 m-b-3">
+            <div class="account-picture"><img src="images/demo/user.png" alt="" class="img-circle img-responsive"></div>
+            <h4 class="text-center m-b-3">John Thor</h4>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation"><a href="@Url.Action("Profile","Account")">Thông tin tài khoản</a></li>
+                <li role="presentation"><a href="@Url.Action("ChangePassword","Account")">Đổi mật khẩu</a></li>
+                <li role="presentation"><a href="@Url.Action("AuctionHistory","Account")">Lịch sử đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("Bidding","Account")">Sản phẩm bạn đang đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("YourProduct", "Account")">Sản phẩm đang được đấu giá</a></li>
+                <li role="presentation" class="active"><a href="@Url.Action("YourCustomer", "Account")">Sản phẩm đã có người mua</a></li>
+            </ul>
+        </div>
+        <!-- End Account Sidebar -->
+        <!-- My Profile Content -->
+        <div class="col-sm-8 col-md-9">
+            <div class="title m-b-2"><span>Order History</span></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>Sản phẩm</td>
+                                    <td>Thời gian kết thúc</td>
+                                    <td>Giá mua</td>
+                                    <td class="text-center">Người thắng</td>
+                                    <td>Đánh giá</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var p in Model)
+                                {
+                                    <tr>
+                                        <td>@p.ProName</td>
+                                        <td>@p.TimeEnd</td>
+                                        <td>@String.Format("{0:n0}", p.PriceCurrent) VNĐ</td>
+                                        <td class="text-center">
+                                            @{
+                                    int uid = -1;
+                                    if (CurrentContext.IsLogged() == true)
+                                    {
+                                        uid = CurrentContext.GetCurUser().f_ID;
+                                    }
+                                    var ctx = new QLDauGiaEntities();
+                                    var user = ctx.Users.Where(u => u.f_ID == @p.Customer)
+                                        .FirstOrDefault();
+                                    string f_Name = null; string eName = null;
+                                    f_Name = user.f_Name;
+
+                                    for (int i = 0; i < user.f_Name.Length - 1; i++)
+                                    {
+                                        eName = eName + "*";
+                                    }
+                                    eName = eName + user.f_Name[user.f_Name.Length - 1];
+                                            }
+                                            @eName
+                                        </td>
+                                        <td>
+                                            @if (ctx.Reviews.Any(r => r.Reviewer == uid &&  r.ProID == p.ProID))
+                                            {
+                                                if (ctx.Reviews.Where(r => r.ProID == p.ProID).FirstOrDefault().Type == true)
+                                                {
+                                                    <p class="btn btn-theme btn-sm">Đã đánh giá <i class="fa fa-thumbs-up"></i></p>
+                                                }
+                                                else
+                                                {
+                                                    <p class="btn btn-theme btn-sm">Đã đánh giá <i class="fa fa-thumbs-down"></i></p>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <button type="button" class="btn btn-theme" data-toggle="modal" data-target="#@String.Copy("Modal"+p.ProID.ToString())"><i class=" fa fa-pencil"></i> Đánh giá</button>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End My Profile Content -->
+        <!-- Modal -->
+        @foreach (var pro in Model)
+        {
+            <div id="@String.Copy("Modal"+pro.ProID.ToString())" class="modal fade" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Nhận xét</h4>
+                        </div>
+                        <div class="modal-body">
+                            @{
+            int UserID = -1;
+            if (CurrentContext.IsLogged() == true)
+            {
+                UserID = (int)CurrentContext.GetCurUser().f_ID;
+            }
+                            }
+                            <form method="post" action="" id="@String.Copy("frmReview" + pro.ProID.ToString())">
+                                <input type="hidden" name="ProID" value="@pro.ProID" />
+                                <input type="hidden" name="Reviewer" value="@UserID" />
+                                <input type="hidden" name="Receiver" value="@pro.Customer" />
+                                <div>
+                                    <div class="radio-inline"><label><input class="with-font" type="radio" name="Type" value="true" checked="checked"><span>Like</span></label></div>
+                                    <div class="radio-inline"><label><input class="with-font" type="radio" name="Type" value="false"><span>Dislike</span></label></div>
+                                </div>
+                                <div @*class="form-group col-sm-12"*@>
+                                    <label for="txComment"><i class=" fa fa-comments"></i> Lời nhắn</label>
+                                    <textarea class="form-control" rows="3" id="txComment" name="Comment" placeholder="Nhận xét"></textarea>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" id="@String.Copy("SendComment" + pro.ProID.ToString())" class="btn btn-theme"><i class=" fa fa-share"></i> Gửi</button>
+                            <button type="button" class="btn btn-theme" data-dismiss="modal"><i class=" fa fa-close"></i> Đóng</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        }
+
+    </div>
+</div>
+<!-- End Main Content -->
