@@ -1,4 +1,5 @@
-﻿@using DoAn_Auction.Models
+﻿@using DoAn_Auction.Helpers;
+@using DoAn_Auction.Models
 @model List<Auction>
 
 @section title
@@ -9,8 +10,16 @@
 {
     <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
     <link href="~/assets/css/nouislider.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.countdown.css" rel="stylesheet" />
 
     <style type="text/css">
+        .not-active {
+           pointer-events:painted;
+           cursor: pointer;
+        }   
+        .added{
+            color: #ef5350;
+        }
     </style>
 }
 @section js
@@ -18,6 +27,125 @@
     <script src="~/assets/js/bootstrap-select.js"></script>
     <script src="~/assets/js/mimity.js"></script>
     <script src="~/assets/js/nouislider.js"></script>
+    <script src="~/assets/js/jquery.countdown.js"></script>   
+@foreach(var p in Model)
+{ 
+<script>
+    // Set the date we're counting down to
+    var countDownDate = new Date("Jan 5, 2018 15:37:25").getTime();
+   
+    // Update the count down every 1 second
+    var x = setInterval(function() {
+
+        // Get todays date and time
+        var now = new Date().getTime();
+
+        // Find the distance between now an the count down date
+        var distance = countDownDate - now;
+
+        // Time calculations for days, hours, minutes and seconds
+        var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        //var exe=@Convert.ToDateTime(p.TimeEnd).Subtract(DateTime.Now).TotalMilliseconds;
+
+
+        // Output the result in an element with id="demo"
+        //document.getElementById("demo").innerHTML = ;
+        document.getElementById("demoday"+@p.ProID.ToString()).innerHTML = days;
+        document.getElementById("demoh"+@p.ProID.ToString()).innerHTML = hours;
+        document.getElementById("demomin"+@p.ProID.ToString()).innerHTML = minutes;
+        document.getElementById("demosec"+@p.ProID.ToString()).innerHTML = seconds;
+
+        // If the count down is over, write some text
+        if (distance < 0) {
+            clearInterval(x);
+            document.getElementById("demo").innerHTML = "EXPIRED";
+        }
+    }, 1000);
+</script>
+<script>
+    function getTimeRemaining(endtime) {
+        var t = Date.parse(endtime) - Date.parse(new Date());
+        var seconds = Math.floor((t / 1000) % 60);
+        var minutes = Math.floor((t / 1000 / 60) % 60);
+        var hours = Math.floor((t / (1000 * 60 * 60)) % 24);
+        var days = Math.floor(t / (1000 * 60 * 60 * 24));
+        return {
+            'total': t,
+            'days': days,
+            'hours': hours,
+            'minutes': minutes,
+            'seconds': seconds
+        };
+    }
+
+    function initializeClock(id, endtime) {
+        var clock = document.getElementById(id);
+        var daysSpan = clock.querySelector('.days2s');
+        var hoursSpan = clock.querySelector('.hours');
+        var minutesSpan = clock.querySelector('.minutes');
+        var secondsSpan = clock.querySelector('.seconds');
+
+        function updateClock() {
+            var t = getTimeRemaining(endtime);
+
+            daysSpan.innerHTML = t.days;
+            hoursSpan.innerHTML = ('0' + t.hours).slice(-2);
+            minutesSpan.innerHTML = ('0' + t.minutes).slice(-2);
+            secondsSpan.innerHTML = ('0' + t.seconds).slice(-2);
+
+            if (t.total <= 0) {
+                clearInterval(timeinterval);
+            }
+        }
+
+        updateClock();
+        var timeinterval = setInterval(updateClock, 1000);
+    }
+
+    var deadline = new Date(Date.parse(new Date()) + 15 * 24 * 60 * 60 * 1000);
+    initializeClock('clockdiv', countDownDate);
+    initializeClock('clockdiv4', deadline);
+</script>
+}
+@foreach (var p in Model)
+{
+    <script type="text/javascript">
+    $('@String.Copy("#addFavo"+p.ProID.ToString())').on('click', function() {
+        var proid=$(this).data('proid');
+        var idtag=$(this).data('idtag');
+        var params={"ProID":proid};
+        var url = '/Account/AddFavo/';
+        $.ajax({
+            type: 'POST',
+            url: url,
+            data:params,
+            dataType: 'json',
+            async: false,
+            @*success: function (data) {
+                console.log(data);
+                //location.reload();
+                $('@String.Copy("#addFavo"+p.ProID.ToString())').addClass('added');
+            }*@
+        })
+        .done(function (data) {
+            //location.reload();
+            $(idtag).attr("data-original-title", "Đã yêu thích");
+            $(idtag).css("color", "#ef5350");
+            $(idtag).attr("onclick", "return false;");
+            $(idtag).attr("data-idtag", "disabled");
+            $(idtag).attr("id", "disabled");
+
+        })
+        .fail(function (data) {
+            console.log(data);
+            alert('Đã thêm vao danh sách');
+        });
+        });
+    </script>
+}
 
 }
 <!-- Breadcrumbs -->
@@ -137,10 +265,10 @@
                             <a href="@Url.Action("Detail", "Product", new { id = p.ProID })" data-toggle="tooltip" title="Chi tiết">
                                 <img alt="Product" src="~/Images/sp/@p.ProID/main.jpg">
                             </a>
-                            @if (Convert.ToDateTime(p.TimeStart).AddHours(2) > DateTime.UtcNow)
+                            @if (Convert.ToDateTime(p.TimeStart).AddHours(2) > DateTime.Now)
                             {
-                                <div class="tags tags-left">
-                                    <span class="label-tags"><span class="label label-success arrowed-right">New</span></span>
+                                <div class="tags tags-left">@p.TimeEnd
+                                    <span class="label-tags"><span class="label label-success arrowed-right">Mới</span></span>
                                 </div>
                             }
                             @if (p.PriceBuy > 0 && p.PriceHighest < p.PriceBuy)
@@ -159,14 +287,87 @@
                                 <div class="option">
                                     <a href="#" data-toggle="tooltip" title="Đấu giá"><i class="fa fa-gavel"></i></a>
                                     <a href="#" data-toggle="tooltip" title="Thêm vào so sánh"><i class="fa fa-align-left"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Thêm vào yêu thích" class="wishlist"><i class="fa fa-heart"></i></a>
+                                    @if (CurrentContext.IsLogged() == false)
+                                    {
+                                        <a href="#" data-toggle="tooltip" title="Thêm vào yêu thích" class="wishlist" ><i class="fa fa-heart"></i></a>
+                                    }
+                                    else
+                                    {
+                                        var UserID = CurrentContext.GetCurUser().f_ID;
+                                        var ctx = new QLDauGiaEntities();
+                                        if (!ctx.Favorites.Where(f => f.UserID == UserID).Any(f => f.ProID == p.ProID))
+                                        {
+                                            <a id="@String.Copy("addFavo"+p.ProID.ToString())" href="javascript:;" data-toggle="tooltip"
+                                               title="Thêm vào yêu thích" data-proid="@p.ProID" data-idtag="@String.Copy("#addFavo"+p.ProID.ToString())" class="wishlist "><i class="fa fa-heart"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" data-toggle="tooltip" title="Đã yêu thích" class="wishlist" onclick="return false;"><i class=" fa fa-heart added"></i></a>
+                                        }
+                                    }
                                 </div>
+                            <p id="demo"></p>
+                            <p id="demo"></p>
+                            <div class="countdown">
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        $('#future_date_2_14').countdown({
+                                            until: new Date(2029, 11 - 1, 03, 00, 00, 00)
+                                        });
+                                    });
+                                </script>
+
+
+                                <span id="future_date_2_14" class="id_countdown is-countdown">
+                                    <span class="countdown-row countdown-show4">
+                                        <span class="countdown-section">
+                                            <span id="@String.Copy("demoday"+p.ProID.ToString())" class="countdown-amount"></span>
+                                            <span class="countdown-period">Days</span>
+                                        </span>
+                                        <span class="countdown-section">
+                                            <span id="@String.Copy("demoh"+p.ProID.ToString())" class="countdown-amount"></span>
+                                            <span class="countdown-period">Hrs</span>
+                                        </span>
+                                        <span class="countdown-section">
+                                            <span id="@String.Copy("demomin"+p.ProID.ToString())" class="countdown-amount"></span>
+                                            <span class="countdown-period">Mins</span>
+                                        </span>
+                                        <span class="countdown-section">
+                                            <span id="@String.Copy("demosec"+p.ProID.ToString())" class="countdown-amount"></span>
+                                            <span class="countdown-period">Secs</span>
+                                        </span>
+                                    </span>
+                                </span>
+
+                                <span id="clockdiv" class="id_countdown is-countdown">
+                                    <span class="countdown-row countdown-show4">
+                                        <span class="countdown-section">
+                                            <span  id="" class="days"></span>
+                                            <span class="countdown-period">Days</span>
+                                        </span>
+                                        <span class="countdown-section">
+                                            <span id="" class="hours"></span>
+                                            <span class="countdown-period">Hrs</span>
+                                        </span>
+                                        <span class="countdown-section">
+                                            <span id="" class="minutes"></span>
+                                            <span class="countdown-period">Mins</span>
+                                        </span>
+                                        <span class="countdown-section days">
+                                            <span id="" class="seconds"></span>
+                                            <span class="countdown-period">Secs</span>
+                                        </span>
+                                    </span>
+                                </span>
+                               
+                                
+                            </div>
                             </div>
                             <h6><a href="detail.html">@p.ProName</a></h6>
                             <div class="price">
                                 <div>
                                     <span class="label-tags"><span class="label label-info arrowed-right">Giá hiện tại: </span></span>
-                                    @String.Format("{0:n0}", p.PriceCurrent) VNĐ 
+                                    @String.Format("{0:n0}", p.PriceCurrent) VNĐ
                                 </div>
                                 @*<span class="price-old">$15.00</span>*@
                             </div>
@@ -207,11 +408,11 @@
                 @if (ViewBag.CurPage == ViewBag.Pages)
                 {
                     <li class="disabled"><a href="">&raquo;</a></li>
-                }
-                else
-                {
+    }
+    else
+    {
                     <li><a href="?page=@(ViewBag.CurPage+1)">&raquo;</a></li>
-                }
+                    }
 
             </ul>
 
