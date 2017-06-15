@@ -1,0 +1,68 @@
+﻿@using DoAn_Auction.Models;
+@model List<Category>
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+        <li class="active">Danh mục</li>
+    </ol>
+</div><!--/.row-->
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Danh mục</h1>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Danh sách danh mục
+                        <a href="@Url.Action("MCategory","Add")" class="btn btn-default" type="button" name="trash" title="Xóa">
+                            <i class="glyphicon glyphicon-plus icon-plus"></i> Thêm mới
+                        </a>
+                    </div>
+                    <div class="panel-body">
+                        <table data-toggle="table" @*data-url="tables/data1.json"*@ data-show-refresh="true" data-show-toggle="true" data-show-columns="true" data-search="true" data-select-item-name="toolbar1" data-pagination="true" data-sort-name="prid" data-sort-order="asc">
+                            <thead>
+                                <tr>
+                                    @*<th data-field="state" data-checkbox="true">Cat ID</th>*@
+                                    <th data-field="catid" data-sortable="false">Cat ID</th>
+                                    <th data-field="catname" data-sortable="false">Cat Name</th>
+                                    <th data-field="prid" data-sortable="false">Parent ID</th>
+                                    <th data-field="prname" data-sortable="false">Parent Name</th>
+                                    <th data-field="action" data-sortable="false" data-align="center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var cat in Model)
+                                {
+                                    <tr>
+                                        @*<td></td>*@
+                                        <td>@cat.CatID</td>
+                                        <td>@cat.CatName</td>
+                                        <td>@cat.ParentID</td>
+                                        <td>
+                                            @{
+                                    var ctx = new QLDauGiaEntities();
+                                    var pr = ctx.Categories
+                                        .Where(c => c.CatID == cat.ParentID).FirstOrDefault();
+                                            }
+                                            @pr.CatName
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("Edit", "MCategory", new { id = cat.CatID })" class="btn btn-default" name="refresh" title="Cập nhật">
+                                                <i class="glyphicon glyphicon-refresh icon-refresh"></i>
+                                            </a>
+                                            <a href="@Url.Action("Delete", "MCategory", new { id = cat.CatID })" class="btn btn-default" name="trash" title="Xóa">
+                                            <i class="glyphicon glyphicon-trash icon-trash"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+    </div>
+</div><!--/.row-->
