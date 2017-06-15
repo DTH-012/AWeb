@@ -1,0 +1,113 @@
+﻿@using DoAn_Auction.Helpers;
+
+@section title
+{
+    Profile
+}
+@section css
+{
+    <link href="~/assets/bootstrap-datepicker-master/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
+}
+@section js
+{
+    <script src="~/assets/jquery-validation-1.16.0/jquery.validate.min.js"></script>
+    <script src="~/assets/bootstrap-datepicker-master/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/assets/js/bootstrap-select.js"></script>
+    <script src="~/assets/js/mimity.js"></script>
+
+    <script type="text/javascript">
+        $('.datepicker').datepicker({
+            format: 'd/m/yyyy',
+            autoclose: true
+        });
+    </script>
+}
+<!-- Breadcrumbs -->
+<div class="breadcrumb-container">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">My Profile</li>
+        </ol>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+<!-- Main Content -->
+<div class="container m-t-3">
+    <div class="row">
+
+        <!-- Account Sidebar -->
+        <div class="col-sm-4 col-md-3 m-b-3">
+            <div class="account-picture"><img src="~/Images/demo/user.png" alt="" class="img-circle img-responsive"></div>
+            <h4 class="text-center m-b-3">John Thor</h4>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation"><a href="@Url.Action("Profile","Account")">Thông tin tài khoản</a></li>
+                <li role="presentation"><a href="@Url.Action("ChangePassword","Account")">Đổi mật khẩu</a></li>
+                <li role="presentation"><a href="@Url.Action("AuctionHistory","Account")">Lịch sử đấu giá</a></li>
+                <li role="presentation" class="active"><a href="@Url.Action("Bidding","Account")">Sản phẩm đang đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("YourProduct", "Account")">Sản phẩm đang được đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("YourCustomer", "Account")">Sản phẩm đã có người mua</a></li>
+            </ul>
+        </div>
+        <!-- End Account Sidebar -->
+        <!-- My Profile Content -->
+        <div class="col-sm-8 col-md-9">
+            <div class="title m-b-2"><span>My Profile</span></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <form method="post" action="" id="frmRegister">
+                        <div class="form-group col-sm-12" hidden>
+                            <label for="txtUsername">Tên đăng nhập</label>
+                            <input type="text" class="form-control" id="txtUsername" placeholder="Tên đăng nhập"
+                                   name="Username" value="@CurrentContext.GetCurUser().f_Username">
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="txtEmail">Email</label>
+                            <input type="email" class="form-control" id="txtEmail" placeholder="Email" name="Email"
+                                   value="@CurrentContext.GetCurUser().f_Email">
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="txtName">Họ tên</label>
+                            <input type="text" class="form-control" id="txtName" placeholder="Name" name="Name"
+                                   value="@CurrentContext.GetCurUser().f_Name">
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="txtDOB">Ngày sinh</label>
+                            <input type="text" class="form-control datepicker" id="txtDOB" placeholder="d/m/yyyy"
+                                   name="DOB" readonly value="@Convert.ToString(string.Format("{0:dd/MM/yyyy}", CurrentContext.GetCurUser().f_DOB))">
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="txtAddress">Địa chỉ</label>
+                            <input type="text" class="form-control" rows="3" id="txtAddress" name="Address" placeholder="Địa chỉ"
+                                   value="@CurrentContext.GetCurUser().f_Address" />
+                                
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="txtPhone">Số điện thoại</label>
+                            <input type="text" class="form-control" id="txtPhone" placeholder="Ví dụ: 086400522 hoặc 0123456789"
+                                   name="Phone" value="@CurrentContext.GetCurUser().f_Phone">
+                        </div>
+                        <div class="form-group col-sm-12">
+                            <label for="txtPWD">Password</label>
+                            <input type="password" class="form-control" id="txtPWD" placeholder="Password" name="RawPWD">
+                        </div>
+                                @*<div class="col-xs-12">
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox"><span> I agree with <a href="#"><u>Terms and Conditions.</u></a></span>
+                    </label>
+                </div>
+            </div>*@
+                        <div class="col-xs-12">
+                            <button type="submit" class="btn btn-theme"><i class="fa fa-check"></i> Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- End My Profile Content -->
+
+    </div>
+</div>
+<!-- End Main Content -->

@@ -1,0 +1,116 @@
+﻿@using DoAn_Auction.Models;
+@model List<AuctionHistory>
+
+@section title
+{
+    Lịch sử đấu giá
+}
+@section css
+{
+    <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
+}
+@section js
+{
+    <script src="~/assets/js/bootstrap-select.js"></script>
+    <script src="~/assets/js/mimity.js"></script>
+}
+<!-- Breadcrumbs -->
+<div class="breadcrumb-container">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">Lịch sử đấu giá</li>
+        </ol>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+
+<!-- Main Content -->
+<div class="container m-t-3">
+    <div class="row">
+
+        <!-- Account Sidebar -->
+        <div class="col-sm-4 col-md-3 m-b-3">
+            <div class="account-picture"><img src="images/demo/user.png" alt="" class="img-circle img-responsive"></div>
+            <h4 class="text-center m-b-3">John Thor</h4>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation"><a href="@Url.Action("Profile","Account")">Thông tin tài khoản</a></li>
+                <li role="presentation"><a href="@Url.Action("ChangePassword","Account")">Đổi mật khẩu</a></li>
+                <li role="presentation" class="active"><a href="@Url.Action("AuctionHistory","Account")">Lịch sử đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("Bidding","Account")">Sản phẩm đang đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("YourProduct", "Account")">Sản phẩm đang được đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("YourCustomer", "Account")">Sản phẩm đã có người mua</a></li>
+            </ul>
+        </div>
+        <!-- End Account Sidebar -->
+        <!-- My Profile Content -->
+        <div class="col-sm-8 col-md-9">
+            <div class="title m-b-2"><span>Order History</span></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <td>Sản phẩm</td>
+                                    <td>Thời gian đặt giá</td>
+                                    <td class="text-right">Giá của bạn</td>
+                                    <td class="text-center">Tình trạng</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(var ah in Model)
+                                { 
+                                <tr>
+                                    
+                                    @{
+                                        var ctx = new QLDauGiaEntities();
+                                            var pro = ctx.Auctions.Where(p => p.ProID == @ah.ProID)
+                                                .FirstOrDefault();
+                                    }
+                                    @if (pro.Status == false || Convert.ToDateTime(pro.TimeEnd) < DateTime.Now)
+                                    {
+                                        <td>@pro.ProName</td>
+                                    }
+                                    else
+                                    {
+                                        <td href="@Url.Action("Detail", "Product", new { id = pro.ProID })">@pro.ProName</td>
+                                    }
+                                    <td>@ah.Time</td>
+                                    <td class="text-right">@String.Format("{0:n0}", ah.Price) VNĐ</td>
+                                    <td class="text-center">
+                                        @if (pro.Status == false || Convert.ToDateTime(pro.TimeEnd) < DateTime.Now)
+                                        {
+                                            <span class="label label-warning">
+                                                Hết hạn đấu giá
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            if (Convert.ToDateTime(pro.TimeEnd).AddHours(-2) < DateTime.Now)
+                                            {
+                                                <span class="label label-danger">
+                                                    Sắp hết hạn
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="label label-success">
+                                                    Đang đấu giá
+                                                </span>
+                                            }
+                                        }
+                                    </td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End My Profile Content -->
+
+    </div>
+</div>
+<!-- End Main Content -->

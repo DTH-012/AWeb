@@ -18,7 +18,16 @@ namespace DoAn_Auction.Controllers
             return PartialView("FormPartial", list);
         }
 
-       
+        // POST: Search
+        //[HttpPost]
+        //public ActionResult Form(string Content,int? cat)
+        //{
+        //    var list = ctx.Auctions
+        //            .Where(c => c.ProName.Contains(Content)).ToList();
+        //    return PartialView("FormPartial", list);
+        //}
+
+        //GET: Search/Result
 	//Function Seach 
         public ActionResult Result(string q, int? cat,int? sort, int page = 1)
         {

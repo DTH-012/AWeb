@@ -85,39 +85,6 @@ namespace DoAn_Auction.Controllers
                 return check;
             }
         }
-        //public JsonResult IsUsernameUnique(string input)
-        //{
-        //    //TODO: Do the validation
-        //    JsonResult result = new JsonResult();
-        //    var ctx = new QLDauGiaEntities();
-        //        var model = ctx.Users
-        //            .Where(p => p.f_Username == input)
-        //            .FirstOrDefault();
-        //        if (model != null)
-        //        {
-        //            result.Data = true;
-        //        }
-        //        result.Data = false;
-        //        return result;
-        //}
-        //public JsonResult IsEmailUnique(string input)
-        //{
-        //    //TODO: Do the validation
-        //    JsonResult result = new JsonResult();
-        //    result.Data = false;
-        //    using (var ctx = new QLDauGiaEntities())
-        //    {
-        //        var model = ctx.Users
-        //            .Where(p => p.f_Email == input)
-        //            .FirstOrDefault();
-        //        if (model != null)
-        //        {
-        //            result.Data = true;
-        //        }
-        //        return result;
-        //    }
-        //}
-
         // POST: Account/Login
         [HttpPost]
         public ActionResult Login(LoginVM model)
@@ -246,7 +213,84 @@ namespace DoAn_Auction.Controllers
             }
         }
 
+		// GET: Account/AuctionHistory
+        [CheckLogin]
+        public ActionResult AuctionHistory()
+        {
+            if(CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var auhis = ctx.AuctionHistories.Where(p => p.UserID == ID).OrderBy(p=>p.ProID).ToList();
+                return View(auhis);
+            }
+        }
+		// GET: Account/YourProduct
+        [CheckLogin]
+        public ActionResult YourProduct()
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Auctions
+                    .Where(p => p.Seller == ID && p.Status==true).ToList();
+                return View(model);
+            }
+        }
 
+        // GET: Account/YourCustomer
+        [CheckLogin]
+        public ActionResult YourCustomer()
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Auctions
+                    .Where(p => p.Seller == ID && p.Status == false && p.Customer!=0).ToList();
+                return View(model);
+            }
+        }
+        // GET: Account/YourCustomer
+        //Review
+        [HttpPost]
+        public ActionResult YourCustomer(Review r)
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var receiver = ctx.Users.Where(u => u.f_ID == r.Receiver).FirstOrDefault();
+                if (r.Type == true)
+                {
+                    receiver.f_Like++;
+                }
+                else if (r.Type == false)
+                {
+                    receiver.f_Dislike++;
+                }
+                ctx.Reviews.Add(r);
+                ctx.Entry(receiver).State = System.Data.Entity.EntityState.Modified;
+                ctx.SaveChanges();
+                var model = ctx.Auctions
+                    .Where(p => p.Seller == ID && p.Status == false && p.Customer != 0).ToList();
+                return View(model);
+            }
+        }
+		
         // POST: Account/Favorite
         [HttpPost]
         public ActionResult AddFavo(int ProID)
