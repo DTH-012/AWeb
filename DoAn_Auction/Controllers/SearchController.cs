@@ -20,7 +20,7 @@ namespace DoAn_Auction.Controllers
 
         // POST: Search
         //[HttpPost]
-        //public ActionResult Form(string Content,int? CatID)
+        //public ActionResult Form(string Content,int? cat)
         //{
         //    var list = ctx.Auctions
         //            .Where(c => c.ProName.Contains(Content)).ToList();
@@ -28,23 +28,24 @@ namespace DoAn_Auction.Controllers
         //}
 
         //GET: Search/Result
-        public ActionResult Result(string Content, int? CatID, int page = 1)
+	//Function Seach 
+        public ActionResult Result(string q, int? cat,int? sort, int page = 1)
         {
             var list=ctx.Auctions.ToList();
             //int n = 0;
-            if (CatID.HasValue == false || CatID==0)
+            if (cat.HasValue == false || cat==0)
             {
                 list= ctx.Auctions
-                   .Where(c => c.ProName.Contains(Content)).ToList();
+                   .Where(c => c.ProName.Contains(q)).ToList();
             }
             else
             {
                 list = ctx.Auctions
-                    .Where(c => c.ProName.Contains(Content) && c.CatID==CatID).ToList();
+                    .Where(c => c.ProName.Contains(q) && c.CatID==cat).ToList();
             }
 
             int n = list.Count();
-            int RecordPerPage = 1;
+            int RecordPerPage = 8;
 
             int nPages = n / RecordPerPage;
 
@@ -57,14 +58,79 @@ namespace DoAn_Auction.Controllers
             ViewBag.Pages = nPages;
 
             ViewBag.CurPage = page;
-
-            list = list.OrderBy(p=>p.ProID)
-                    .Skip((page - 1) * RecordPerPage)
+            if (sort.HasValue == true)
+            {
+                if (sort == 0)
+                {
+                    list = list.OrderByDescending(p => p.TimeEnd).ToList();
+                }
+                else
+                {
+                    list = list.OrderBy(p => p.PriceCurrent).ToList();
+                }
+                ViewBag.sort = sort;
+            }
+            else
+            {
+                list = list.OrderBy(p => p.ProID).ToList();
+            }
+            list = list.Skip((page - 1) * RecordPerPage)
                     .Take(RecordPerPage)
                     .ToList();
-            ViewBag.Content = Content;
-            ViewBag.CatID = CatID;
+            //TempData["q"] = q;
+            //TempData["cat"] = cat;
+            ViewBag.q = q;
+            ViewBag.cat = cat;
             return View(list);
+        }
+        public ActionResult sort(string q, int? cat,int? sort, int page = 1)
+        {
+            var list = ctx.Auctions.ToList();
+            //int n = 0;
+            if (cat.HasValue == false || cat == 0)
+            {
+                list = ctx.Auctions
+                   .Where(c => c.ProName.Contains(q)).ToList();
+            }
+            else
+            {
+                list = ctx.Auctions
+                    .Where(c => c.ProName.Contains(q) && c.CatID == cat).ToList();
+            }
+
+            int n = list.Count();
+            int RecordPerPage = 8;
+
+            int nPages = n / RecordPerPage;
+
+            int m = n % RecordPerPage;
+            if (m > 0)
+            {
+                nPages++;
+            }
+
+            ViewBag.Pages = nPages;
+
+            ViewBag.CurPage = page;
+            if(sort.HasValue==true)
+            {
+                if(sort==0)
+                {
+                    list = list.OrderByDescending(p => p.TimeEnd).ToList();
+                }
+                else
+                {
+                    list = list.OrderBy(p => p.PriceCurrent).ToList();
+                }
+            }
+            list = list.Skip((page - 1) * RecordPerPage)
+                    .Take(RecordPerPage)
+                    .ToList();
+            //TempData["q"] = q;
+            //TempData["cat"] = cat;
+            ViewBag.q = q;
+            ViewBag.cat = cat;
+            return Json(list, JsonRequestBehavior.AllowGet);
         }
     }
 }
