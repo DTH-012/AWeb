@@ -1,0 +1,42 @@
+﻿@using DoAn_Auction.Models;
+@model Category
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+        <li class="active">Danh mục</li>
+    </ol>
+</div><!--/.row-->
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Danh mục</h1>
+        <div class="col-md-6">
+            <form method="post">
+                <div class="form-group">
+                    <input type="hidden" class="form-control" value="@Model.CatID" name="CatID">
+                    <label>Danh mục cha</label>
+                    <select class="form-control" name="ParentID">
+                        @{
+                            var ctx = new QLDauGiaEntities();
+                            var prcat = ctx.Categories.Where(c => c.ParentID == 0).ToList();
+                        }
+                        @foreach (var cpr in prcat)
+                        {
+                            <option value="@cpr.CatID">@cpr.CatName</option>
+                        }
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tên danh mục</label>
+                    <input type="text" class="form-control" placeholder="Tên danh mục" value="@Model.CatName" name="CatName">
+                </div>
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> Cập nhật</button>
+            </form>
+        </div>
+    </div>
+</div><!--/.row-->

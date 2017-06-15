@@ -1,0 +1,26 @@
+﻿@using DoAn_Auction.Models;
+@model Category
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+        <li class="active">Danh mục</li>
+    </ol>
+</div><!--/.row-->
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Danh mục</h1>
+        <div class="col-md-6">
+            <label>Xóa danh mục @Model.CatName</label>
+            <form method="post">
+                <input type="hidden" class="form-control" value="@Model.CatID" name="idDelete">
+                <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> OK</button>
+            </form>
+        </div>
+    </div>
+</div><!--/.row-->
