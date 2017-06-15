@@ -146,3 +146,5 @@ C:\Users\beanbean\Documents\Visual Studio 2013\Projects\AWeb\DoAn_Auction\bin\Sy
 C:\Users\beanbean\Documents\Visual Studio 2013\Projects\AWeb\DoAn_Auction\obj\Debug\DoAn_Auction.csprojResolveAssemblyReference.cache
 C:\Users\beanbean\Documents\Visual Studio 2013\Projects\AWeb\DoAn_Auction\obj\Debug\DoAn_Auction.dll
 C:\Users\beanbean\Documents\Visual Studio 2013\Projects\AWeb\DoAn_Auction\obj\Debug\DoAn_Auction.pdb
+C:\Users\ndvbx\Documents\Visual Studio 2012\Projects\AWeb\DoAn_Auction\obj\Debug\DoAn_Auction.csprojResolveAssemblyReference.cache
+C:\Users\ndvbx\Documents\Visual Studio 2012\Projects\AWeb\DoAn_Auction\obj\Debug\DoAn_Auction.dll

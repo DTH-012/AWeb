@@ -1,0 +1,37 @@
+﻿@using DoAn_Auction.Models;
+@model User
+@{
+    ViewBag.Title = "Add";
+    Layout = "~/Views/Shared/_Admin.cshtml";
+}
+@section js
+{
+
+    <script type="text/javascript">
+
+    </script>
+}
+
+<div class="row">
+    <ol class="breadcrumb">
+        <li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+        <li class="active">Người dùng</li>
+    </ol>
+</div><!--/.row-->
+
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Người dùng</h1>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div class="col-md-6">
+                    <label>Xóa người dùng @Model.f_Username</label>
+                    <form method="post">
+                        <input type="hidden" class="form-control" value="@Model.f_ID" name="idDelete">
+                        <button type="submit" class="btn btn-primary"><i class="glyphicon glyphicon-check"></i> OK</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><!--/.row-->
