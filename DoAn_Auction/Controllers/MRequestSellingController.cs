@@ -11,6 +11,19 @@ namespace DoAn_Auction.Controllers
     [CheckLogin(RequiredPermission = 3)]
     public class MRequestSellingController : Controller
     {
+        // GET: MRequestSelling/Index
+        public ActionResult Index()
+        {
+            ViewBag.Current = "Request";
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var cat = ctx.RegisterSellings.Where(r=>r.Status==1)
+                    .OrderBy(r=>r.DateSend)
+                    .ToList();
+                return View(cat);
+            }
+        }
+
         //POST: MRequestSelling/Accept
         [HttpPost]
         public ActionResult Accept(int id)
