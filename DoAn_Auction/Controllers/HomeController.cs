@@ -53,5 +53,16 @@ namespace DoAn_Auction.Controllers
                 return PartialView("Top5HighestPartial", dsSp);
             }
         }
+		public ActionResult Top5TimeEnd()
+        {
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var dsSp = ctx.Auctions
+                    .Where(p => p.Status == true)
+                    .OrderBy(a => (a.TimeEnd))
+                    .Take(5).ToList();
+                return PartialView("Top5TimeEndPartial", dsSp);
+            }
+        }
     }
 }
