@@ -1,0 +1,53 @@
+﻿@using DoAn_Auction.Models;
+@model List<Auction>
+@foreach(var pro in Model)
+{ 
+<div class="box-product-outer">
+    <div class="box-product">
+        <div class="img-wrapper">
+            <a href="@Url.Action("Detail", "Product", new { id = pro.ProID })">
+                <img alt="Product" src="~/Images/sp/@pro.ProID/main.jpg">
+            </a>
+            @if (Convert.ToDateTime(pro.TimeStart).AddHours(2) > DateTime.Now)
+            {
+                <div class="tags tags-left">
+                <span class="label-tags"><span class="label label-success arrowed-right">Mới</span></span>
+            </div>
+            }
+            @if (pro.PriceBuy > 0 && pro.PriceHighest < pro.PriceBuy)
+            {
+                <div class="tags tags-right">
+                    <span class="label-tags"><span class="label label-danger arrowed">Hot - Mua ngay</span></span>
+                    <span class="label-tags"><span class="label label-primary arrowed">@String.Format("{0:n0}", pro.PriceBuy)VNĐ</span></span>
+                </div>
+            }
+            else
+            {
+                <div class="tags">
+                    <span class="label-tags"><span class="label label-danger arrowed">Hot</span></span>
+                    @*<span class="label-tags"><span class="label label-default arrowed">Collection</span></span>*@
+                </div>
+            }
+            <div class="option">
+                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
+                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
+                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+            </div>
+        </div>
+        <h6><a href="detail.html">@pro.ProName</a></h6>
+        <div class="price">
+            <span class="label-tags"><span class="label label-info arrowed-right">Giá hiện tại: </span></span>
+            @String.Format("{0:n0}", pro.PriceCurrent) VNĐ
+        </div>
+        @*<div class="rating">
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star"></i>
+            <i class="fa fa-star-half-o"></i>
+            <i class="fa fa-star-o"></i>
+            <a href="#">(5 reviews)</a>
+        </div>*@
+    </div>
+</div>
+}
+
