@@ -1,0 +1,785 @@
+﻿@using DoAn_Auction.Helpers;
+@using DoAn_Auction.Models
+@model Auction
+
+@section title
+{
+    Chi tiết sản phẩm
+}
+@section css
+{
+    <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="~/assets/css/owl.carousel.css" rel="stylesheet" />
+    <link href="~/assets/css/owl.theme.default.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.bootstrap-touchspin.css" rel="stylesheet" />
+<link href="~/assets/js/bootstrap-table/bootstrap-table.min.css" rel="stylesheet" />
+
+    <style type="text/css">
+    </style>
+}
+@section js
+{
+    <script src="~/assets/js/bootstrap-select.js"></script>
+    <script src="~/assets/js/owl.carousel.min.js"></script>
+    <script src="~/assets/js/jquery.ez-plus.js"></script>
+    <script src="~/assets/js/jquery.bootstrap-touchspin.js"></script>
+    <script src="~/assets/js/jquery.raty-fa.js"></script>
+    <script src="~/assets/js/mimity.js"></script>
+    <script src="~/assets/js/mimity.detail.js"></script>
+<script src="~/assets/js/bootstrap-table/bootstrap-table.min.js"></script>
+    <script src="~/assets/js/table-paging.js"></script>
+    @*<script src="~/assets/js/elevate/jquery-1.8.3.min.js"></script>
+        <script src="~/assets/js/elevate/jquery.elevatezoom.js"></script>*@
+    @*<script src="~/assets/js/behavior_legacy.js"></script>*@
+    @*<script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-28871117-1']);
+            _gaq.push(['_setDomainName', 'wrapbootstrap.com']);
+            _gaq.push(['_trackPageview']);
+            (function () {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>*@
+
+    @*<script src="~/assets/js/behavior_legacy.js"></script>*@
+    @*<script type="text/javascript">
+            var _gaq = _gaq || [];
+            _gaq.push(['_setAccount', 'UA-28871117-1']);
+            _gaq.push(['_setDomainName', 'wrapbootstrap.com']);
+            _gaq.push(['_trackPageview']);
+            (function () {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+            })();
+        </script>*@
+    @*<script>
+            $(document).ready(function () {
+                function fix_height() {
+                    var h = $("#tray").height();
+                    $("#preview").attr("height", (($(window).height()) - h) + "px");
+                }
+                $(window).resize(function () { fix_height(); }).resize();
+                $("#preview").contentWindow.focus();
+            });
+        </script>*@
+
+    <script>
+        $('#txtPriceSet').TouchSpin({
+            verticalbuttons: true,
+            min: @Model.PriceCurrent+@Model.Step,
+            max: 1000000000,
+            step: @Model.Step,
+            initval: 20000,
+            postfix: 'VNĐ'
+        });
+        $('#myTable').on('click', '.kickLink', function () {
+            var proid = $(this).data('proid');
+            var userid = $(this).data('userid');
+            var params={"ProID":proid,"KUserID":userid};
+            var url = '/Product/KickUser/';
+            //var urla=Url.Action("Index", "Equipment",new{ProID=proid,KUserID=userid});
+            var cfr = confirm("Người này sẽ không thể tiếp tục đấu giá trên sản phẩm này!");
+            if (cfr == true) {
+                    $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data:params,
+                        async: false,
+                        success: function (data) {
+                            console.log(data);
+                            location.reload();
+                        }
+                    });
+            }
+            //$('#frmKick').submit();
+            //var proid = $(this).data('proid');
+            //var userid = $(this).data('userid');
+            //var url = '/Product/KickUser/?ProID=' +ProID+'?KUserID='+UserID;
+            //var r = confirm("Press a button!");
+            //if (r == true) {
+            //    //$.ajax({
+            //    //    type: 'POST',
+            //    //    url: url,
+            //    //    async: false,
+            //    //    success: function (data) {
+            //    //        console.log(data);
+            //    //    }
+            //    //});
+            //}
+            //else {
+            //    alert("You pressed Cancel!");
+            //}
+        });
+        //function queryParams() {
+        //    return {
+        //        type: 'owner',
+        //        sort: 'updated',
+        //        direction: 'desc',
+        //        per_page: 100,
+        //        page: 1
+        //    };
+        //}
+
+    </script>
+
+
+
+@*<script>
+    var pager = new Pager('results',1);
+    pager.init();
+    pager.showPageNav('pager', 'pageNavPosition');
+    pager.showPage(2);
+</script>*@
+
+
+
+
+
+
+
+
+
+}
+<!-- Breadcrumbs -->
+<div class="breadcrumb-container">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="products.html">Products</a></li>
+            <li class="active">@Model.ProName</li>
+        </ol>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+<!-- Main Content -->
+<div class="container m-t-3">
+    <div class="row">
+
+        <!-- Image List -->
+        <div class="col-sm-4">
+            <div class="image-detail">
+                <img src="~/Images/sp/@Model.ProID/main.jpg" data-zoom-image="Images/sp/Large/@Model.ProID/main.jpg" alt="">
+            </div>
+            <div class="products-slider-detail m-b-2">
+                @for (int i = 0; i < 4; i++)
+                {
+                    if (i == 0)
+                    {
+                        <a href="#"><img src="~/Images/sp/@Model.ProID/main.jpg" data-zoom-image="Images/sp/Large/@Model.ProID/main.jpg" alt="" class="img-thumbnail"></a>
+                    }
+                    else
+                    {
+                        <a href="#"><img src="~/Images/sp/@Model.ProID/@String.Copy(@i.ToString()+".jpg")" data-zoom-image="Images/sp/Large/@Model.ProID/{@i}.jpg" onerror="this.style.visibility='hidden'" alt="" class="img-thumbnail"></a>
+                    }
+
+                }
+
+                @*<a href="#"><img src="images/demo/p1-2.jpg" data-zoom-image="images/demo/p1-large-2.jpg" alt="" class="img-thumbnail"></a>
+                    <a href="#"><img src="images/demo/p1-3.jpg" data-zoom-image="images/demo/p1-large-3.jpg" alt="" class="img-thumbnail"></a>
+                    <a href="#"><img src="images/demo/p1-4.jpg" data-zoom-image="images/demo/p1-large-4.jpg" alt="" class="img-thumbnail"></a>
+                    <a href="#"><img src="images/demo/p1-1.jpg" data-zoom-image="images/demo/p1-large-1.jpg" alt="" class="img-thumbnail"></a>*@
+            </div>
+            <div class="title"><span>Share to</span></div>
+            <div class="share-button m-b-3">
+                <button type="button" class="btn btn-primary"><i class="fa fa-facebook"></i></button>
+                <button type="button" class="btn btn-info"><i class="fa fa-twitter"></i></button>
+                <button type="button" class="btn btn-danger"><i class="fa fa-google-plus"></i></button>
+                <button type="button" class="btn btn-primary"><i class="fa fa-linkedin"></i></button>
+                <button type="button" class="btn btn-warning"><i class="fa fa-envelope"></i></button>
+            </div>
+        </div>
+        <!-- End Image List -->
+
+        <div class="col-sm-8">
+            @if (@ViewBag.ErrorMsg != null)
+            {
+                <div class="form-group">
+                    <div class="alert alert-warning">
+                        <strong>Warning! </strong>@ViewBag.ErrorMsg
+                    </div>
+                </div>
+            }
+            @if (@ViewBag.Success != null)
+            {
+                <div class="form-group">
+                    <div class="alert alert-success">
+                        @ViewBag.Success
+                    </div>
+                </div>
+            }
+            <div class="title-detail">@Model.ProName</div>
+            <table class="table table-detail">
+                <tbody>
+                    <tr>
+                        <td>Price</td>
+                        <td>
+                            <div class="price">
+                                @if (Model.PriceBuy > 0 && Model.PriceHighest < Model.PriceBuy)
+                                {
+                                    <div><span class="label-tags"><span class="label label-danger arrowed-right">Mua ngay: </span></span> @String.Format("{0:n0}", @Model.PriceBuy) VNĐ</div>
+                                }
+                                <span class="label-tags"><span class="label label-info arrowed-right">Giá hiện tại: </span></span>
+                                @String.Format("{0:n0}", @Model.PriceCurrent) VNĐ
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Thời gian bắt đầu</td>
+                        <td>
+                            <div>
+                                <span>@Model.TimeStart</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Thời gian kết thúc</td>
+                        <td>
+                            <div>
+                                <span>@Model.TimeEnd</span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Người bán</td>
+                        <td>
+                            <div>
+                                @{string f_Name = null; string eName = null;}
+                                @if (Model.Seller != 0)
+                                {
+                                    var ctx = new QLDauGiaEntities();
+                                    var u = ctx.Users.Where(us => us.f_ID == Model.Seller).FirstOrDefault();
+
+                                    f_Name = u.f_Name;
+                                    for (int i = 0; i < u.f_Name.Length - 1; i++)
+                                    {
+                                        eName = eName + "*";
+                                    }
+                                    eName = eName + u.f_Name[u.f_Name.Length - 1];
+                                }
+                                <span>@eName</span>
+                            </div>
+                        </td>
+                    </tr><tr>
+                        <td>Người giữ giá</td>
+                        <td>
+                            <div>
+                                @{f_Name = null; eName = null;}
+                                @if (Model.Customer != 0)
+                                {
+                                    var ctx = new QLDauGiaEntities();
+                                    var u = ctx.Users.Where(us => us.f_ID == Model.Customer).FirstOrDefault();
+
+                                    f_Name = u.f_Name;
+                                    for (int i = 0; i < u.f_Name.Length - 1; i++)
+                                    {
+                                        eName = eName + "*";
+                                    }
+                                    eName = eName + u.f_Name[u.f_Name.Length - 1];
+                                }
+                                <span>@eName</span>
+                            </div>
+                        </td>
+                    </tr>
+                    @*<tr>
+                            <td>Quantity</td>
+                            <td>
+                                <div class="input-qty">
+                                    <input type="text" value="1" class="form-control text-center" />
+                                </div>
+                            </td>
+
+                        </tr>*@
+                    @*<tr>
+                            <td>Size</td>
+                            <td>
+                                <select class="selectpicker" data-width="80px">
+                                    <option value="S">S</option>
+                                    <option value="M">M</option>
+                                    <option value="L">L</option>
+                                    <option value="XL">XL</option>
+                                    <option value="XXL">XXL</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Checkbox</td>
+                            <td>
+                                <div class="checkbox"><label><input type="checkbox" id="checkbox1"><span> Checkbox 1</span></label></div>
+                                <div class="checkbox"><label><input type="checkbox" id="checkbox2"><span> Checkbox 2</span></label></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Radio</td>
+                            <td>
+                                <div class="radio"><label><input type="radio" name="radio-product" checked="checked"><span>Radio 1</span></label></div>
+                                <div class="radio"><label><input type="radio" name="radio-product"><span>Radio 2</span></label></div>
+                            </td>
+                        </tr>*@
+                    <tr>
+                        <td></td>
+                        <td>
+                            @*<button class="btn btn-theme m-b-1" type="button"><i class="fa fa-shopping-cart"></i> Add to Cart</button>*@
+                            <button class="btn btn-theme m-b-1" type="button"><i class="fa fa-align-left"></i> Add to Compare</button>
+                            <button class="btn btn-theme m-b-1" type="button"><i class="fa fa-heart"></i> Add to Wishlist</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-md-8">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#desc" aria-controls="desc" role="tab" data-toggle="tab">Mô tả</a></li>
+                @if (CurrentContext.IsLogged() == true)
+                {
+                    var ctx = new QLDauGiaEntities();
+                    int CurID = (int)CurrentContext.GetCurUser().f_ID;
+                    var u = ctx.Users.Where(us => us.f_ID == CurID).FirstOrDefault();
+                    float likeCur=(float)u.f_Like;
+                    float dislikeCur=(float)u.f_Dislike;
+                    float rate = (float)likeCur / (dislikeCur + likeCur) * 100;
+                    if ((rate-Model.Required) >= 0)
+                    {
+                        <li role="presentation"><a href="#auction" aria-controls="auction" role="tab" data-toggle="tab">Đấu giá @rate</a></li>
+                    }
+                <li role="presentation"><a href="#auctionhistory" aria-controls="auctionhistory" role="tab" data-toggle="tab">Lịch sử đấu giá</a></li>
+                }
+                @*<li role="presentation"><a href="#detail" aria-controls="detail" role="tab" data-toggle="tab">Detail</a></li>*@
+                @*<li role="presentation"><a href="#review" aria-controls="review" role="tab" data-toggle="tab">Reviews (2)</a></li>*@
+            </ul>
+            <!-- End Nav tabs -->
+            <!-- Tab panes -->
+            <div class="tab-content tab-content-detail">
+
+                <!-- Description Tab Content -->
+                <div role="tabpanel" class="tab-pane active" id="desc">
+                    <div class="well">
+                        @Html.Raw(HttpUtility.HtmlDecode(Model.FullDes))
+                        <p>
+                        </p>
+                        <hr />
+                        @*<h4 class="m-b-2">Đấu giá sản phẩm</h4>
+                            <form role="form">
+                                <div class="form-group input-qty">
+                                    <label for="Name">Giá của bạn</label>
+                                    <input id="txtPriceSet" type="text" value="@Model.PriceCurrent" class="form-control text-center" />
+                                </div>
+                                <button type="submit" class="btn btn-theme">Đấu giá</button>
+                            </form>*@
+                    </div>
+                </div>
+                <!-- End Description Tab Content -->
+                <!-- Auction Tab Content -->
+                <div role="tabpanel" class="tab-pane" id="auction">
+                    <div class="well">
+                        <h4 class="m-b-2">Đấu giá sản phẩm</h4>
+                        <form role="form" method="post">
+                            <div class="form-group ">
+                                <label for="txtPriceSet">Giá của bạn</label>
+                                <input type="hidden" value="@Model.ProID" name="ProID" hidden />
+                                <input id="txtPriceSet" type="text" value="@Model.PriceCurrent" class="form-control text-center" name="PriceSet" />
+                            </div>
+                            <button type="submit" class="btn btn-theme">Đấu giá</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- End Auction Tab Content -->
+                <!-- Auction History Tab Content -->
+                <div role="tabpanel" class="tab-pane" id="auctionhistory">
+                    <div class="well">
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Thời gian đặt giá</th>
+                                    <th>Người đấu giá</th>
+                                    <th>Giá đặt</th>
+                                    @if (CurrentContext.IsLogged() == true )
+                                    { 
+                                        if(CurrentContext.GetCurUser().f_ID==Model.Seller)
+                                        {
+                                        <th class="text-center">Action</th>
+                                        }
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody id="myTable">
+                                @foreach (var ah in ViewBag.AuHis)
+                                {
+                                <tr>
+                                    <td>@ah.Time</td>
+                                    <td>@ah.UserName</td>
+                                    <td>@ah.Price</td>
+                                    @if (CurrentContext.IsLogged() == true )
+                                    {
+                                        if(CurrentContext.GetCurUser().f_ID==Model.Seller)
+                                        {
+                                        <td class="action text-center">
+                                            <a id="kickLink" href="javascript:;" class="text-danger kickLink"
+                                               data-toggle="tooltip" data-placement="top" data-original-title="Kick người chơi"
+                                               data-proid="@ah.ProID" data-userid="@ah.UserID"><i class="fa fa-user-times"></i></a>
+                                        </td>
+                                        }
+                                    }
+                                </tr>
+                                }
+                            </tbody>
+                        </table> 
+                        <form id="frmKick" method="post" action="@Url.Action("KickUser","Auction")"></form>
+                        @*<div class="col-md-12 text-center">
+                            <ul class="pagination" id="myPager"></ul>
+                        </div>*@
+                        @*<table id="results" class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Thời gian</th>
+                                    <th>Người đấu giá</th>
+                                    <th>Giá đặt</th>
+                                </tr>
+                                @foreach (var ah in ViewBag.AuHis)
+                                {
+                                    <tr>
+                                        <td>ah.Time</td>
+                                        <td>ah.UserName</td>
+                                        <td>ah.Price</td>
+                                    </tr>
+                                <tr>
+                                    <td>ah.Time</td>
+                                    <td>ah.UserName</td>
+                                    <td>ah.Price</td>
+                                </tr>
+                                }
+                            </tbody>
+                        </table>*@
+                        @*<div id="pageNavPosition" class="pagination"></div>*@
+                        
+                    </div>
+                </div>
+                <!-- End Auction History Tab Content -->
+                <!-- Detail Tab Content -->
+                @*<div role="tabpanel" class="tab-pane" id="detail">
+                        <div class="well">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <td>Lorem</td>
+                                        <td>Ipsum</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Dolor</td>
+                                        <td>Sit Amet</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Consectetur</td>
+                                        <td>Adipisicing</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Excepteur</td>
+                                        <td>Occaecat</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>*@
+                <!-- End Detail Tab Content -->
+                <!-- Review Tab Content -->
+                @*<div role="tabpanel" class="tab-pane" id="review">
+                        <div class="well">
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object img-thumbnail" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZWVlIi8+PHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9zdmc+">
+                                    </a>
+                                    <div class="product-rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star-half-o"></i>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="media-heading"><strong>John Thor</strong></h5>
+                                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                                </div>
+                            </div>
+                            <div class="media">
+                                <div class="media-left">
+                                    <a href="#">
+                                        <img class="media-object img-thumbnail" alt="64x64" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2NCIgaGVpZ2h0PSI2NCI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjZWVlIi8+PHRleHQgdGV4dC1hbmNob3I9Im1pZGRsZSIgeD0iMzIiIHk9IjMyIiBzdHlsZT0iZmlsbDojYWFhO2ZvbnQtd2VpZ2h0OmJvbGQ7Zm9udC1zaXplOjEycHg7Zm9udC1mYW1pbHk6QXJpYWwsSGVsdmV0aWNhLHNhbnMtc2VyaWY7ZG9taW5hbnQtYmFzZWxpbmU6Y2VudHJhbCI+NjR4NjQ8L3RleHQ+PC9zdmc+">
+                                    </a>
+                                    <div class="product-rating">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star-half-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                </div>
+                                <div class="media-body">
+                                    <h5 class="media-heading"><strong>Michael</strong></h5>
+                                    Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis. Fusce condimentum nunc ac nisi vulputate fringilla. Donec lacinia congue felis in faucibus.
+                                </div>
+                            </div>
+                            <hr />
+                            <h4 class="m-b-2">Add your review</h4>
+                            <form role="form">
+                                <div class="form-group">
+                                    <label for="Name">Name</label>
+                                    <input type="text" id="Name" class="form-control" placeholder="Name">
+                                </div>
+                                <div class="form-group">
+                                    <label for="Email">Email</label>
+                                    <input type="text" id="Email" class="form-control" placeholder="Email">
+                                </div>
+                                <div class="form-group">
+                                    <label>Rating</label><div class="clearfix"></div>
+                                    <div class="input-rating"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="Review">Your Review</label>
+                                    <textarea id="Review" class="form-control" rows="5" placeholder="Your Review"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-theme">Submit Review</button>
+                            </form>
+                        </div>
+                    </div>*@
+                <!-- End Review Tab Content -->
+
+            </div>
+            <!-- End Tab panes -->
+
+        </div>
+    </div>
+
+    <!-- Related Products -->
+    <div class="row m-t-3">
+        <div class="col-xs-12">
+            <div class="title"><span>Related Products</span></div>
+            <div class="related-product-slider owl-controls-top-offset">
+                <div class="box-product-outer">
+                    <div class="box-product">
+                        <div class="img-wrapper">
+                            <a href="detail.html">
+                                <img alt="Product" src="images/demo/p1-1.jpg">
+                            </a>
+                            <div class="tags">
+                                <span class="label-tags"><span class="label label-default arrowed">Featured</span></span>
+                            </div>
+                            <div class="tags tags-left">
+                                <span class="label-tags"><span class="label label-danger arrowed-right">Sale</span></span>
+                            </div>
+                            <div class="option">
+                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                        <h6><a href="detail.html">WranglerGrey Printed Slim Fit Round Neck T-Shirt</a></h6>
+                        <div class="price">
+                            <div>$13.50 <span class="label-tags"><span class="label label-default">-10%</span></span></div>
+                            <span class="price-old">$15.00</span>
+                        </div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                            <a href="#">(5 reviews)</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-product-outer">
+                    <div class="box-product">
+                        <div class="img-wrapper">
+                            <a href="detail.html">
+                                <img alt="Product" src="images/demo/p2-1.jpg">
+                            </a>
+                            <div class="tags tags-left">
+                                <span class="label-tags"><span class="label label-success arrowed-right">New Arrivals</span></span>
+                            </div>
+                            <div class="option">
+                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                        <h6><a href="detail.html">CelioKhaki Printed Round Neck T-Shirt</a></h6>
+                        <div class="price">
+                            <div>$13.50 <span class="label-tags"><span class="label label-primary">-10%</span></span></div>
+                            <span class="price-old">$15.00</span>
+                        </div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                            <a href="#">(5 reviews)</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-product-outer">
+                    <div class="box-product">
+                        <div class="img-wrapper">
+                            <a href="detail.html">
+                                <img alt="Product" src="images/demo/p3-1.jpg">
+                            </a>
+                            <div class="tags">
+                                <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
+                                <span class="label-tags"><span class="label label-info arrowed">Collection</span></span>
+                            </div>
+                            <div class="option">
+                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                        <h6><a href="detail.html">CelioOff White Printed Round Neck T-Shirt</a></h6>
+                        <div class="price">
+                            <div>$13.50 <span class="label-tags"><span class="label label-success">-10%</span></span></div>
+                            <span class="price-old">$15.00</span>
+                        </div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                            <a href="#">(5 reviews)</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-product-outer">
+                    <div class="box-product">
+                        <div class="img-wrapper">
+                            <a href="detail.html">
+                                <img alt="Product" src="images/demo/p4-1.jpg">
+                            </a>
+                            <div class="tags">
+                                <span class="label-tags"><span class="label label-primary arrowed">Popular</span></span>
+                            </div>
+                            <div class="option">
+                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                        <h6><a href="detail.html">Levi'sNavy Blue Printed Round Neck T-Shirt</a></h6>
+                        <div class="price">
+                            <div>$13.50 <span class="label-tags"><span class="label label-danger">-10%</span></span></div>
+                            <span class="price-old">$15.00</span>
+                        </div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                            <a href="#">(5 reviews)</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-product-outer">
+                    <div class="box-product">
+                        <div class="img-wrapper">
+                            <a href="detail.html">
+                                <img alt="Product" src="images/demo/p5-1.jpg">
+                            </a>
+                            <div class="tags tags-left">
+                                <span class="label-tags"><span class="label label-primary arrowed-right">Pupolar</span></span>
+                            </div>
+                            <div class="option">
+                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                        <h6><a href="detail.html">IncultAcid Wash Raglan Crew Neck T-Shirt</a></h6>
+                        <div class="price">
+                            <div>$13.50 <span class="label-tags"><span class="label label-danger arrowed">-10%</span></span></div>
+                            <span class="price-old">$15.00</span>
+                        </div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                            <a href="#">(5 reviews)</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-product-outer">
+                    <div class="box-product">
+                        <div class="img-wrapper">
+                            <a href="detail.html">
+                                <img alt="Product" src="images/demo/p6-1.jpg">
+                            </a>
+                            <div class="tags">
+                                <span class="label-tags"><span class="label label-danger arrowed">Hot Item</span></span>
+                            </div>
+                            <div class="option">
+                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                        <h6><a href="detail.html">Avoir EnvieOlive Printed Round Neck T-Shirt</a></h6>
+                        <div class="price">
+                            <div>$13.50 <span class="label-tags"><span class="label label-success arrowed">-10%</span></span></div>
+                            <span class="price-old">$15.00</span>
+                        </div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                            <a href="#">(5 reviews)</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-product-outer">
+                    <div class="box-product">
+                        <div class="img-wrapper">
+                            <a href="detail.html">
+                                <img alt="Product" src="images/demo/vneck1.jpg">
+                            </a>
+                            <div class="tags">
+                                <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
+                                <span class="label-tags"><span class="label label-default arrowed">Collection</span></span>
+                            </div>
+                            <div class="option">
+                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-shopping-cart"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
+                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
+                            </div>
+                        </div>
+                        <h6><a href="detail.html">PhosphorusGrey Melange Printed V Neck T-Shirt</a></h6>
+                        <div class="price">
+                            <div>$13.50 <span class="label-tags"><span class="label label-danger arrowed">-10%</span></span></div>
+                            <span class="price-old">$15.00</span>
+                        </div>
+                        <div class="rating">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star-half-o"></i>
+                            <i class="fa fa-star-o"></i>
+                            <a href="#">(5 reviews)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Related Products -->
+
+</div>
+<!-- End Main Content -->

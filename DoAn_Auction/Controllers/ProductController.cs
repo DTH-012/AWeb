@@ -41,5 +41,32 @@ namespace DoAn_Auction.Controllers
             }
         }
 
+        // GET: Product/Detail
+        public ActionResult Detail(int? id)
+        {
+            if (id.HasValue == false)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Auctions
+                    .Where(p => p.ProID == id)
+                    .FirstOrDefault();
+                var result = from u in ctx.Users
+                             join ah in ctx.AuctionHistories on u.f_ID equals ah.UserID
+                             where ah.ProID==id && ah.Status==true
+                             //into g
+                             select new AuctionHistoryVM
+                             {
+                                 ProID=ah.ProID,UserID=ah.UserID,Time=ah.Time,UserName=u.f_Name,Price=ah.Price,
+                             };
+                ViewBag.AuHis = result.ToList();
+                return View(model);
+            }
+        }
+
     }
 }
