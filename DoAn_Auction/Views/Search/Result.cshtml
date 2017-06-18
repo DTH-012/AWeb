@@ -58,6 +58,17 @@
             //        alert('fail');
             //    });
         });
+        $('[data-countdown]').each(function () {
+            var $this = $(this), finalDate = $(this).data('countdown');
+            $this.countdown(finalDate, function (event) {
+                $this.html(event.strftime(''
+              + '<span class="countdown-section"><span class="countdown-amount">%D</span><span class="countdown-period">Ngày</span></span>'
+              + '<span class="countdown-section"><span class="countdown-amount">%H</span><span class="countdown-period">Giờ</span></span>'
+              + '<span class="countdown-section"><span class="countdown-amount">%M</span><span class="countdown-period">Phút</span></span>'
+              + '<span class="countdown-section"><span class="countdown-amount">%S</span><span class="countdown-period">Giây</span></span>'
+              ));
+            });
+        });
     </script>
 }
 
@@ -135,6 +146,14 @@
                                     <a href="#" data-toggle="tooltip" title="Thêm vào yêu thích" class="wishlist"><i class="fa fa-heart"></i></a>
                                 </div>
                             </div>
+							
+                        <div class="countdown">
+                            <span id="future_date_2_14" class="id_countdown is-countdown">
+                                <span id="clock2" data-countdown="@Convert.ToDateTime(p.TimeEnd).AddDays(15).Date.ToString("MM/dd/yyyy hh:mm:ss tt")" class=" countdown-row countdown-show4">
+
+                                </span>
+                            </span>
+                        </div>
                             <h6><a href="detail.html">@p.ProName</a></h6>
                             <div class="price">
                                 <div>

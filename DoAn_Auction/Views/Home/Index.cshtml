@@ -16,6 +16,19 @@
     <script src="~/assets/js/bootstrap-select.js"></script>
     <script src="~/assets/js/owl.carousel.js"></script>
     <script src="~/assets/js/mimity.js"></script>
+	<script>
+    $('[data-countdown]').each(function () {
+        var $this = $(this), finalDate = $(this).data('countdown');
+        $this.countdown(finalDate, function (event) {
+            $this.html(event.strftime(''
+          + '<span class="countdown-section"><span class="countdown-amount">%D</span><span class="countdown-period">Ngày</span></span>'
+          + '<span class="countdown-section"><span class="countdown-amount">%H</span><span class="countdown-period">Giờ</span></span>'
+          + '<span class="countdown-section"><span class="countdown-amount">%M</span><span class="countdown-period">Phút</span></span>'
+          + '<span class="countdown-section"><span class="countdown-amount">%S</span><span class="countdown-period">Giây</span></span>'
+          ));
+        });
+    });
+</script>
 }
 
 
