@@ -227,7 +227,70 @@ namespace DoAn_Auction.Controllers
                 ViewBag.AuHis = result.ToList();
                 return View(model);
             }
-        } 
+        }
+// GET: Product/Detail
+        [CheckLogin]
+        [HttpPost]
+        public ActionResult KickUser(int? ProID, int? KUserID)
+        {
+            if (ProID.HasValue == false || KUserID.HasValue == false)
+            {
+                return RedirectToAction("Index", "Product");
+            }
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var auhis = ctx.AuctionHistories
+                    .Where(p => p.ProID == ProID && p.UserID == KUserID)
+                    .ToList();
+                foreach (var p in auhis)
+                {
+                    p.Status = false;
+                    ctx.Entry(p).State = System.Data.Entity.EntityState.Modified;
+                }
+                ctx.SaveChanges();
+                var au = ctx.AuctionHistories.OrderByDescending(p => p.Price)
+                    .Where(p => p.ProID == ProID && p.Status==true).Take(1).FirstOrDefault();
+                var pro = ctx.Auctions.Where(p => p.ProID == ProID).FirstOrDefault();
+                var seller = ctx.Users.Where(u => u.f_ID == pro.Seller).FirstOrDefault();
+                var kicked = ctx.Users.Where(u => u.f_ID == KUserID).FirstOrDefault();
+
+                //Send email to KickedkUser
+                string content = System.IO.File.ReadAllText(Server.MapPath("~/assets/mailMsg/tplKick.html"));
+                content = content.Replace("{{Title}}", "Sản phẩm bạn đang đấu giá");
+                content = content.Replace("{{MsgHeader}}", "Bạn đã bị cấm tham gia đấu giá của một sản phẩm");
+                content = content.Replace("{{SellerName}}", StringUtils.MaHoa(seller.f_Name));
+                content = content.Replace("{{KName}}", kicked.f_Name);
+                content = content.Replace("{{ProName}}", pro.ProName);
+                content = content.Replace("{{ProLink}}", Url.Action("Detail", "Product", new { id = pro.ProID }, this.Request.Url.Scheme).ToString());
+                content = content.Replace("{{Home}}", Url.Action("Index", "Home", null, this.Request.Url.Scheme).ToString());
+                MailHelper.SendEmail(kicked.f_Email, "Cảnh báo về sản phẩm bạn đang đấu giá", content);
+
+                if(pro.Customer==KUserID)
+                {
+                    pro.PriceHighest = au.Price;
+                    pro.PriceCurrent = au.Price;
+                    pro.Customer = au.UserID;
+                    ctx.Entry(pro).State = System.Data.Entity.EntityState.Modified;
+                    ctx.SaveChanges();
+
+                    //Send email to HighestUser
+                    var huser = ctx.Users.Where(u => u.f_ID == au.UserID).FirstOrDefault();
+                    string contentH = System.IO.File.ReadAllText(Server.MapPath("~/assets/mailMsg/tplAuction.html"));
+                    contentH = contentH.Replace("{{ColorTitle}}", "#3333ff");
+                    contentH = contentH.Replace("{{Title}}", "Sản phẩm bạn đang đấu giá");
+                    contentH = contentH.Replace("{{MsgHeader}}", "Bạn đã trờ thành người giữ giá của một sản phẩm");
+                    contentH = contentH.Replace("{{Msg}}", "Bạn đã là người giữ giá cao nhất của sản phẩm dưới đấy");
+                    contentH = contentH.Replace("{{UName}}", huser.f_Name);
+                    contentH = contentH.Replace("{{SellerName}}", StringUtils.MaHoa(seller.f_Name));
+                    contentH = contentH.Replace("{{ProName}}", pro.ProName);
+                    contentH = contentH.Replace("{{ProLink}}", Url.Action("Detail", "Product", new { id = pro.ProID }, this.Request.Url.Scheme).ToString());
+                    contentH = contentH.Replace("{{Home}}", Url.Action("Index", "Home", null, this.Request.Url.Scheme).ToString());
+                    MailHelper.SendEmail(huser.f_Email, "Thông báo về sản phẩm bạn đang đấu giá", contentH);
+                }
+                return Json(JsonRequestBehavior.AllowGet);
+            }
+            //return RedirectToAction("Detail", "Product", new { id = ProID });
+        }		
 
     }
 }
