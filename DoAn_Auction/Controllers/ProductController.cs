@@ -290,6 +290,84 @@ namespace DoAn_Auction.Controllers
                 return Json(JsonRequestBehavior.AllowGet);
             }
             //return RedirectToAction("Detail", "Product", new { id = ProID });
+        }
+		
+		// GET: Product/Detail - TimeOver
+        [HttpPost]
+        public ActionResult TimeOver(int? ProID)
+        {
+            if (ProID.HasValue == false )
+            {
+                return RedirectToAction("Index", "Product");
+            }
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var pro=ctx.Auctions.Where(p=>p.ProID==ProID).FirstOrDefault();
+                if(pro.Status==false)
+                {
+                    return RedirectToAction("Index", "Product");
+                }
+                if(pro.Adjourning==true)
+                {
+                    pro.TimeEnd.AddMinutes(10);
+                    ctx.Entry(pro).State = System.Data.Entity.EntityState.Modified;
+                    ctx.SaveChanges();
+                    return Json(1,JsonRequestBehavior.AllowGet);
+                }
+                var seller = ctx.Users.Where(u => u.f_ID == pro.Seller).FirstOrDefault();
+                string contentSN = System.IO.File.ReadAllText(Server.MapPath("~/assets/mailMsg/tplAuction.html"));
+                string contentS = System.IO.File.ReadAllText(Server.MapPath("~/assets/mailMsg/tplAuction.html"));
+                string contentW = System.IO.File.ReadAllText(Server.MapPath("~/assets/mailMsg/tplAuction.html"));
+                if(pro.Customer==0)
+                {
+                    pro.Status = false;
+                    ctx.Entry(pro).State = System.Data.Entity.EntityState.Modified;
+                    ctx.SaveChanges();
+                    //Email to Seller
+                    contentSN = contentSN.Replace("{{ColorTitle}}", "#ffad33");
+                    contentSN = contentSN.Replace("{{Title}}", "Sản phẩm đã đăng");
+                    contentSN = contentSN.Replace("{{MsgHeader}}", "Đấu giá kết thúc");
+                    contentSN = contentSN.Replace("{{UName}}", seller.f_Name);
+                    contentSN = contentSN.Replace("{{Msg}}", "Đấu giá kết thúc, không có ai đấu giá sản phẩm của bạn");
+                    contentSN = contentSN.Replace("{{SellerName}}", StringUtils.MaHoa(seller.f_Name));
+                    contentSN = contentSN.Replace("{{ProName}}", pro.ProName);
+                    contentSN = contentSN.Replace("{{ProLink}}", Url.Action("Detail", "Product", new { id = pro.ProID }, this.Request.Url.Scheme).ToString());
+                    contentSN = contentSN.Replace("{{Home}}", Url.Action("Index", "Home", null, this.Request.Url.Scheme).ToString());
+                    MailHelper.SendEmail(seller.f_Email, "Thông báo về sản phẩm bạn đang đấu giá", contentSN);
+                }
+                else
+                {
+                    pro.Status = false;
+                    ctx.Entry(pro).State = System.Data.Entity.EntityState.Modified;
+                    ctx.SaveChanges();
+                    var winner = ctx.Users.Where(u => u.f_ID == pro.Customer).FirstOrDefault();
+                    //Email to Seller
+                    contentS = contentS.Replace("{{ColorTitle}}", "#66ff33");
+                    contentS = contentS.Replace("{{Title}}", "Sản phẩm đã đăng");
+                    contentS = contentS.Replace("{{MsgHeader}}", "Đấu giá kết thúc");
+                    contentS = contentS.Replace("{{UName}}", seller.f_Name);
+                    contentS = contentS.Replace("{{Msg}}", "Đấu giá kết thúc, đã có người chiến thắng sản phẩm của bạn");
+                    contentS = contentS.Replace("{{SellerName}}", StringUtils.MaHoa(seller.f_Name));
+                    contentS = contentS.Replace("{{ProName}}", pro.ProName);
+                    contentS = contentS.Replace("{{ProLink}}", Url.Action("Detail", "Product", new { id = pro.ProID }, this.Request.Url.Scheme).ToString());
+                    contentS = contentS.Replace("{{Home}}", Url.Action("Index", "Home", null, this.Request.Url.Scheme).ToString());
+                    MailHelper.SendEmail(seller.f_Email, "Thông báo về sản phẩm bạn đang đấu giá", contentS);
+                    //Email to Winner
+                    contentW = contentW.Replace("{{ColorTitle}}", "#66ff33");
+                    contentW = contentW.Replace("{{Title}}", "Sản phẩm bạn đang đấu giá");
+                    contentW = contentW.Replace("{{MsgHeader}}", "Đấu giá kết thúc");
+                    contentW = contentW.Replace("{{UName}}", winner.f_Name);
+                    contentW = contentW.Replace("{{Msg}}", "Đấu giá kết thúc, bạn đã chiến thắng trong một sản phẩm");
+                    contentW = contentW.Replace("{{SellerName}}", StringUtils.MaHoa(seller.f_Name));
+                    contentW = contentW.Replace("{{ProName}}", pro.ProName);
+                    contentW = contentW.Replace("{{ProLink}}", Url.Action("Detail", "Product", new { id = pro.ProID }, this.Request.Url.Scheme).ToString());
+                    contentW = contentW.Replace("{{Home}}", Url.Action("Index", "Home", null, this.Request.Url.Scheme).ToString());
+                    MailHelper.SendEmail(winner.f_Email, "Thông báo về sản phẩm bạn đang đấu giá", contentW);
+                    return Json(2, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(null, JsonRequestBehavior.AllowGet);
+            }
         }		
 
     }
