@@ -10,6 +10,61 @@ namespace DoAn_Auction.Controllers
 {
     public class ProductController : Controller
     {
+		
+        // GET: Product/ByCat
+        public ActionResult ByCat(int ? id,int page=1)
+        {
+            if(id.HasValue==false)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var cat = ctx.Categories
+                    .Where(c => c.CatID == id).FirstOrDefault();
+                var dssp = new List<Auction>();
+                if (cat.Categories.Count > 0)
+                {
+                    foreach(var catchild in cat.Categories)
+                    {
+                        var pro = ctx.Auctions
+                            .Where(p => p.CatID == catchild.CatID).ToList();
+                        dssp.AddRange(pro);
+                    }
+                }
+                else
+                {
+                    var pro = ctx.Auctions
+                            .Where(p => p.CatID == cat.CatID).ToList();
+                    dssp.AddRange(pro);
+                }
+
+                int n = dssp.Count();
+
+                int RecordPerPage = 12;
+
+                int nPages = n / RecordPerPage;
+
+                int m = n % RecordPerPage;
+                if (m > 0)
+                {
+                    nPages++;
+                }
+
+                ViewBag.Pages = nPages;
+
+                ViewBag.CurPage = page;
+
+                var list = dssp.OrderBy(p => p.ProID)
+                    .Skip((page - 1) * RecordPerPage)
+                    .Take(RecordPerPage)
+                    .ToList();
+                
+                return View(list);
+            }
+
+        }
         // GET: Product/Index
         public ActionResult Index(int page = 1)
         {
