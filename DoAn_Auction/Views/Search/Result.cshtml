@@ -1,0 +1,281 @@
+﻿@using DoAn_Auction.Models
+@model List<Auction>
+@section title
+{
+    Search
+}
+
+@section css
+{
+    <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
+    <link href="~/assets/css/owl.carousel.css" rel="stylesheet" />
+    <link href="~/assets/css/owl.theme.default.css" rel="stylesheet" />
+    <link href="~/assets/css/menucate.css" rel="stylesheet" />
+    <link href="~/assets/css/nouislider.css" rel="stylesheet" />
+<link href="~/assets/css/jquery.countdown.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .img-main {
+            height: 250px;
+        }
+    </style>
+}
+
+@section js
+{
+    <script src="~/assets/js/bootstrap-select.js"></script>
+    <script src="~/assets/js/owl.carousel.js"></script>
+    <script src="~/assets/js/mimity.js"></script>
+    <script src="~/assets/js/nouislider.js"></script>
+<script src="~/assets/js/jquery.countdown.js"></script>
+
+    <script>
+        $("#cbosort").change(function () {
+            $('#frmSearch').submit();
+            //var sort = $(this).find('option:selected').val();
+            //var q =  $(this).data('q');
+            //var cat = $(this).data('cat');
+            //var params = { "q": q, "cat": cat,"sort":sort,"page":1 };
+            //var url = '/Search/sort/';
+            // $.ajax({
+            //    type: 'POST',
+            //    url: url,
+            //    data: params,
+            //    async: false,
+            //    //success: function (data) {
+            //    //    console.log(data);
+            //    //    $('#result').html();
+            //    //}
+            // })
+            //.done(function (data) {
+            //    //$.each(data, function (idx, p) {
+            //    //    $('#ProName').append(p.ProName);
+            //    //});
+            //    //location.reload();
+            //})
+            //    .fail(function (data) {
+            //        console.log(data);
+            //        alert('fail');
+            //    });
+        });
+    </script>
+}
+
+
+<!-- Main Content -->
+<div class="container m-t-2">
+    <div class="row">
+
+        <!-- New Arrivals & Best Selling -->
+        <div class="col-md-3 m-b-1">
+            <div class="navbar-vertical">
+                <div class="header title"><span>Categories <i class="fa fa-navicon pull-right"></i></span></div>
+                @Html.Action("List", "Category")
+            </div><!-- end navbar-vertical -->
+
+        </div>
+        <!-- End New Arrivals & Best Selling -->
+
+        <div class="clearfix visible-sm visible-xs"></div>
+
+        <div id="result" class="col-md-9">
+
+            <!-- Featured -->
+            <div class="title"><span>Kết quả</span></div>
+            <!-- Product Sorting Bar -->
+            <div class="product-sorting-bar">
+                <div>
+                    Sắp xếp
+                    <form id="frmSearch" action="@Url.Action("Result", "Search")">
+                        <select id="cbosort" name="sort" class="selectpicker" data-width="200px" data-q="@ViewBag.q" data-cat="@ViewBag.cat">
+                            <option value="0" @{string selected = null; if (ViewBag.sort == 0) { selected = "selected"; }} @selected>Thời gian kết thúc giảm dần</option>
+                            <option value="1" @{ selected = null; if (ViewBag.sort == 1) { selected = "selected"; }} @selected>Giá tăng dần</option>
+                        </select>
+                        <input type="hidden" class="form-control" name="q" value="@ViewBag.q">
+                        <input type="hidden" class="form-control" name="cat" value="@ViewBag.cat">
+                        </form>
+</div>
+                @*<div>
+                    Show
+                    <select name="show" class="selectpicker" data-width="60px">
+                        <option value="8">8</option>
+                        <option value="12">12</option>
+                        <option value="16">16</option>
+                    </select> per page
+                </div>*@
+            </div>
+            <!-- End Product Sorting Bar -->
+            @foreach (var p in Model)
+            {
+                <div class="col-sm-4 col-md-3 box-product-outer result2">
+                    <div class="box-product">
+                        <div id="productList" class="img-wrapper">
+                            <a href="@Url.Action("Detail", "Product", new { id = p.ProID })" data-toggle="tooltip" title="Chi tiết">
+                                <img class="img-main" alt="Product" src="~/Images/sp/@p.ProID/main.jpg">
+                            </a>
+                            @if (Convert.ToDateTime(p.TimeStart).AddHours(2) > DateTime.UtcNow)
+                            {
+                                <div class="tags tags-left">
+                                    <span class="label-tags"><span class="label label-success arrowed-right">New</span></span>
+                                </div>
+                            }
+                            @if (p.PriceBuy > 0 && p.PriceHighest < p.PriceBuy)
+                            {
+                                <div class="tags tags-right">
+                                    <span class="label-tags"><span class="label label-danger arrowed">Mua ngay</span></span>
+                                    <span class="label-tags"><span class="label label-primary arrowed">@String.Format("{0:n0}", p.PriceBuy)VNĐ</span></span>
+                                </div>
+                            }
+                            @*<div class="tags">
+                                    <span class="label-tags"><span class="label label-default arrowed">Featured</span></span>
+                                </div>*@
+                                @*<div class="tags tags-left">
+                                        <span class="label-tags"><span class="label label-danger arrowed-right">Sale</span></span>
+                                    </div>*@
+                                <div class="option">
+                                    <a href="#" data-toggle="tooltip" title="Đấu giá"><i class="fa fa-gavel"></i></a>
+                                    <a href="#" data-toggle="tooltip" title="Thêm vào so sánh"><i class="fa fa-align-left"></i></a>
+                                    <a href="#" data-toggle="tooltip" title="Thêm vào yêu thích" class="wishlist"><i class="fa fa-heart"></i></a>
+                                </div>
+                            </div>
+                            <h6><a id="ProName" href="detail.html">@p.ProName</a></h6>
+                            <div class="price">
+                                <div>
+                                    <span class="label-tags"><span class="label label-info arrowed-right">Giá hiện tại: </span></span>
+                                    @String.Format("{0:n0}", p.PriceCurrent) VNĐ
+                                </div>
+                                @*<span class="price-old">$15.00</span>*@
+                            </div>
+                        <div class="price">
+                            <div>
+                                <span class="label-tags"><span class="label label-info arrowed-right">Người giữ giá: </span></span>
+                                @{string f_Name = null; string eName = null;}
+                                @if(p.Customer!=0){
+                                var ctx = new QLDauGiaEntities();
+                                var u = ctx.Users.Where(us => us.f_ID == p.Customer).FirstOrDefault();
+
+                                f_Name=u.f_Name;
+                                for (int i = 0; i < u.f_Name.Length - 1; i++)
+                                {
+                                eName = eName + "*";
+                                }
+                                eName = eName + u.f_Name[u.f_Name.Length - 1];
+                                }
+                                @eName
+                            </div>
+                            @*<span class="price-old">$15.00</span>*@
+                        </div>
+
+                        <div class="price">
+                            <div>
+                                <span class="label-tags"><span class="label label-info arrowed-right">Số lượt đấu giá: </span></span>
+                                @{
+                                    int Amount = 0;
+                                    var atx = new QLDauGiaEntities();
+                                    if (atx.AuctionHistories.Any(a => a.ProID == p.ProID))
+                                    {
+                                        var ah = atx.AuctionHistories.Where(a => a.ProID == p.ProID).GroupBy(a => a.ProID).FirstOrDefault();
+                                        if (ah.Count() > 0)
+                                        {
+                                            Amount = ah.Count();
+                                        }
+                                    }
+                                }
+                                @Amount
+                            </div>
+                            @*<span class="price-old">$15.00</span>*@
+                        </div>
+                            @*<div class="rating">
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star"></i>
+                                    <i class="fa fa-star-half-o"></i>
+                                    <a href="#">(5 reviews)</a>
+                                </div>*@
+                        </div>
+                    </div>
+            }
+            <ul class="pagination col-sm-12">
+                @if (ViewBag.CurPage == 1)
+                {
+                    <li class="disabled"><a href="">&laquo;</a></li>
+                }
+                else
+                {
+                    <li><a href="?Content=@ViewBag.Content&CatID=@ViewBag.CatID&page=@(ViewBag.CurPage-1)">&laquo;</a></li>
+                }
+                @for (int i = 1; i <= ViewBag.Pages; i++)
+                {
+                    if (ViewBag.CurPage == i)
+                    {
+                        <li class="active"><a href="?page=@i">@i</a></li>
+                    }
+                    else
+                    {
+                        <li><a href="?Content=@ViewBag.Content&CatID=@ViewBag.CatID&page=@i">@i</a></li>
+                    }
+                }
+                @*<li class="active"><a href="">1</a></li>
+            <li><a href="">2</a></li>
+            <li><a href="">3</a></li>*@
+                @if (ViewBag.CurPage == ViewBag.Pages)
+                {
+                    <li class="disabled"><a href="">&raquo;</a></li>
+                }
+                else
+                {
+                    <li><a href="?Content=@ViewBag.Content&CatID=@ViewBag.CatID&page=@(ViewBag.CurPage+1)">&raquo;</a></li>
+                }
+
+            </ul>
+            <!-- End Featured -->
+
+            <div class="clearfix visible-sm visible-xs"></div>
+
+        </div>
+
+    </div>
+
+    <!-- Brand & Clients -->
+    <div class="row">
+        <div class="col-xs-12 m-t-1">
+            <div class="title text-center"><span>Brand & Clients</span></div>
+            <div class="brand-slider owl-controls-top-offset">
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand1.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand2.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand3.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand4.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand5.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand1.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand2.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand3.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand4.png" alt=""></a>
+                </div>
+                <div class="brand">
+                    <a href=""><img src="/images/demo/brand5.png" alt=""></a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Brand & Clients -->
+
+</div>
+<!-- End Main Content -->
