@@ -1,0 +1,35 @@
+﻿@using DoAn_Auction.Helpers;
+
+@section title
+{
+    Profile
+}
+@section css
+{
+    <link href="~/assets/bootstrap-datepicker-master/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+    <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
+}
+@section js
+{
+    <script src="~/assets/jquery-validation-1.16.0/jquery.validate.min.js"></script>
+    <script src="~/assets/bootstrap-datepicker-master/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/assets/js/bootstrap-select.js"></script>
+    <script src="~/assets/js/mimity.js"></script>
+
+    <script type="text/javascript">
+        $('.datepicker').datepicker({
+            format: 'd/m/yyyy',
+            autoclose: true
+        });
+    </script>
+}
+<!-- Breadcrumbs -->
+<div class="breadcrumb-container">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="index.html">Home</a></li>
+            <li class="active">My Profile</li>
+        </ol>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
