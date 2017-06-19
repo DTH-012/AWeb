@@ -425,5 +425,27 @@ namespace DoAn_Auction.Controllers
             }
         }		
 
+		 [CheckLogin]
+        [HttpPost]
+        public ActionResult AddDes(int ProID, string DesBonus)
+        {
+            //var UID = 0;
+            if (CurrentContext.IsLogged() == false)
+            {
+                return RedirectToAction("Detail", "Product", new { id = ProID });
+            }
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var bonus = new DesBonu
+                {
+                    ProID = ProID,
+                    DesBonus = DesBonus,
+                    Time = DateTime.Now,
+                };
+                ctx.DesBonus.Add(bonus);
+                ctx.SaveChanges();
+                return RedirectToAction("Detail", "Product", new { id = ProID });
+            }
+        }
     }
 }
