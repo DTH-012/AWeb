@@ -193,3 +193,117 @@
     </div>
 </div>
 <!-- End Breadcrumbs -->
+<!-- Main Content -->
+<div class="container m-t-3">
+    <div class="row">
+        @if (ViewBag.ErrorMsg == null)
+        {
+            ViewBag.ErrorMsg = TempData["ErrorMsg"];
+            TempData["ErrorMsg"] = null;
+        }
+        @if (@ViewBag.ErrorMsg != null)
+        {
+            <div class="form-group col-md-12 ">
+                <div class="alert alert-warning">
+                    <strong>Warning! </strong>@ViewBag.ErrorMsg
+                </div>
+            </div>
+        }
+        @if (@ViewBag.Success != null)
+        {
+            <div class="form-group col-md-12 ">
+                <div class="alert alert-success">
+                    @ViewBag.Success
+                </div>
+            </div>
+        }
+        <!-- Register Form -->
+        <div class="col-sm-6 login-register-form m-b-3">
+            <div class="title"><span>Create An Account</span></div>
+            <div class="row">
+                <form method="post" action="@Url.Action("Register", "Account")" id="frmRegister">
+                    <div class="form-group col-sm-12">
+                        <label for="txtUsername">Tên đăng nhập</label>
+                        <input type="text" class="form-control" id="txtUsername" placeholder="Tên đăng nhập" name="Username">
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="txtEmail">Email</label>
+                        <input type="email" class="form-control" id="txtEmail" placeholder="Email" name="Email">
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="txtPWD">Password</label>
+                        <input type="password" class="form-control" id="txtPWD" placeholder="Password" name="RawPWD">
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="txtCPWD">Nhập lại Password</label>
+                        <input type="password" class="form-control" id="txtCPWD" placeholder="Nhập lại Password" name="CPWD">
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="txtName">Họ tên</label>
+                        <input type="text" class="form-control" id="txtName" placeholder="Name" name="Name">
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="txtDOB">Ngày sinh</label>
+                        <input type="text" class="form-control datepicker" id="txtDOB" placeholder="d/m/yyyy" name="DOB" readonly>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="txtAddress">Địa chỉ</label>
+                        <textarea class="form-control" rows="3" id="txtAddress" name="Address" placeholder="Địa chỉ"></textarea>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="txtPhone">Số điện thoại</label>
+                        <input type="text" class="form-control" id="txtPhone" placeholder="Ví dụ: 086400522 hoặc 0123456789" name="Phone">
+                    </div>
+                    <div class="form-group col-sm-12">
+                        @*<div class="col-sm-6">*@
+                        @{
+                            var Captcha = new MvcCaptcha("ExampleCaptcha");
+                            Captcha.Reset(); //Important
+                        }
+                        @Html.Captcha(Captcha)
+                        @*</div>*@
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="txtName">Captcha</label>
+                        <input type="text" class="form-control" id="txtCaptcha" placeholder="Captcha" name="CaptchaCode">
+                    </div>
+                    @*<div class="col-xs-12">
+                            <div class="checkbox">
+                                <label>
+                                    <input type="checkbox"><span> I agree with <a href="#"><u>Terms and Conditions.</u></a></span>
+                                </label>
+                            </div>
+                        </div>*@
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-theme"><i class="fa fa-long-arrow-right"></i> Register</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End Register Form -->
+        <!-- Login Form -->
+        <div class="col-sm-6">
+            <div class="title"><span>Already Registered ?</span></div>
+            <form id="frmLogin" action="@Url.Action("Login", "Account")" method="post">
+                <div class="form-group">
+                    <label for="txtUsernameLog">Email address</label>
+                    <input type="text" class="form-control" id="tx
+                           hình như name khactUsernameLog" placeholder="Username" name="Username">
+                </div>
+                <div class="form-group">
+                    <label for="txtPasswordLog">Password</label>
+                    <input type="password" class="form-control" id="txtPasswordLog" placeholder="Password" name="RawPWD">
+                </div>
+                <div class="checkbox">
+                    <label>
+                        <input type="checkbox" name="Remember"><span> Ghi nhớ</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn btn-theme"><i class="fa fa-long-arrow-right"></i> Login</button>
+            </form>
+        </div>
+        <!-- End Login Form -->
+
+    </div>
+</div>
+<!-- End Main Content -->

@@ -25,3 +25,62 @@
     </div>
 </div>
 <!-- End Breadcrumbs -->
+<!-- Main Content -->
+<div class="container m-t-3">
+    <div class="row">
+
+        <!-- Account Sidebar -->
+        <div class="col-sm-4 col-md-3 m-b-3">
+            <div class="account-picture"><img src="~/Images/demo/user.png" alt="" class="img-circle img-responsive"></div>
+            <h4 class="text-center m-b-3">John Thor</h4>
+            <ul class="nav nav-pills nav-stacked">
+                <li role="presentation" class="active"><a href="@Url.Action("Profile","Account")">Thông tin tài khoản</a></li>
+                <li role="presentation"><a href="@Url.Action("ChangePassword","Account")">Đổi mật khẩu</a></li>
+                <li role="presentation"><a href="@Url.Action("AuctionHistory","Account")">Lịch sử đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("Bidding","Account")">Sản phẩm đang đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("YourProduct", "Account")">Sản phẩm đang được đấu giá</a></li>
+                <li role="presentation"><a href="@Url.Action("YourCustomer", "Account")">Sản phẩm đã có người mua</a></li>
+            </ul>
+        </div>
+        <!-- End Account Sidebar -->
+        <!-- My Profile Content -->
+        <div class="col-sm-8 col-md-9">
+            <div class="title m-b-2"><span>My Profile</span></div>
+            <div class="row">
+                <div class="col-xs-12">
+                    <ul class="list-group list-group-nav">
+                        <li class="list-group-item">
+                            <strong>Userame</strong>
+                            <p>@Model.f_Username</p>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Họ tên</strong>
+                            <p>@Model.f_Name</p>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Email</strong>
+                            <p>@Model.f_Email</p>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Ngày sinh</strong>
+                            <p>@Convert.ToString(string.Format("{0:dd/MM/yyyy}", Model.f_DOB))</p>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Địa chỉ</strong>
+                            <p>@Model.f_Address</p>
+                        </li>
+                        <li class="list-group-item">
+                            <strong>Số điện thoại</strong>
+                            <p>@Model.f_Phone</p>
+                        </li>
+                    </ul>
+                    <a href="@Url.Action("EditProfile","Account")" class="btn btn-theme pull-left"><i class="fa fa-pencil"></i> Edit My Profile</a>
+                </div>
+            </div>
+        </div>
+        <!-- End My Profile Content -->
+
+    </div>
+</div>
+<!-- End Main Content -->
+

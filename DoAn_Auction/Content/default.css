@@ -1,0 +1,106 @@
+._7ql {
+    border-radius: 2px;
+    display: inline;
+    margin: 5px 6px 2px -8px;
+    vertical-align: inherit;
+}
+._ry {
+    height: 24px;
+    width: 24px;
+}
+img {
+    border: 0;
+}
+._2s25 {
+    background-color: transparent;
+    color: inherit;
+    display: inline-block;
+    font-size: 20px;
+    -webkit-font-smoothing: antialiased;
+    font-weight: bold;
+    height: 27px;
+    line-height: 28px;
+    padding: 0 10px 1px;
+    position: relative;
+    text-decoration: none;
+    vertical-align: top;
+    white-space: nowrap;
+}
+h1{
+	margin-top: 5px;
+}
+._2t-a {
+    display: flex;
+    justify-content: space-between;
+}
+img._Logo{
+	width:160px;
+	height:auto;
+	text-align: center;
+}
+#wellcome{
+	margin-left: 5px;
+	color: #4a37ea;
+}
+td._list{
+	border:solid;
+	border-color: white; 
+	width: 150px;
+	height:25px;
+}
+._list{
+	border: solid;
+	border-width:7px;
+	border-color: #4a37ea; 
+	text-align: center;
+}
+._Logo{
+
+	text-align: center;
+	margin-top: 5px;
+	font-weight:bold;
+}
+.menu{
+	text-align: left;
+}
+.abc{
+	vertical-align: top;
+	margin-left:100px;
+	color: white;
+	font-weight: bold;
+	font-size: 16px;
+}
+#Wraper{
+	width: 1040px;
+	margin: 0 auto;
+	background-color: #e938ee
+}
+#Cover{
+	margin-top:5px;
+	width: 835px;
+	height: 390px;
+	float: right;
+
+}
+#Banner{
+	height:35px;
+	background-color: #3b5998;
+    border-bottom: 1px solid #29487d;
+	Color: inherit;
+	font-weight: 28px;
+}
+#MainNav{
+	height:600px;
+	font-size:20px;
+	margin-top:5px;
+	width: 200px;
+	float: left;
+	background-color: #e9ebee
+}
+#Content{
+	width: 835px;
+	height: 210px;
+	float:right;
+	background-color: #e9ebee
+}
+
