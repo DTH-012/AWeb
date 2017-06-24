@@ -18,5 +18,20 @@ namespace DoAn_Auction.Helpers
             return ret;
 
         }
+	public static string MaHoa(string strInput)
+        {
+            string eName = null;
+            string tmp = strInput;
+            if (strInput == null)
+            {
+                return eName;
+            }
+            for (int i = 0; i < tmp.Length - 1; i++)
+            {
+                eName = eName + "*";
+            }
+            eName = eName + tmp[tmp.Length - 1];
+            return eName;
+        }
     }
 }

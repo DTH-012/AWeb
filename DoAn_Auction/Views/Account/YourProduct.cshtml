@@ -69,8 +69,13 @@
                                                 var ctx = new QLDauGiaEntities();
                                                 var user = ctx.Users.Where(u=>u.f_ID == @p.Customer)
                                                     .FirstOrDefault();
+                                                string user_fName = null;
+                                                if (user!= null)
+                                                {
+                                                    user_fName = user.f_Name;
+                                                }
                                             }
-                                            @user.f_Name
+                                            @StringUtils.MaHoa(user_fName)
                                         </td>
                                     </tr>
                                 }
