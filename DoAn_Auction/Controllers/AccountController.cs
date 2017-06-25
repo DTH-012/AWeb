@@ -211,5 +211,77 @@ namespace DoAn_Auction.Controllers
                 return View(model);
             }
         }
+		// POST: Account/Favorite
+        [HttpPost]
+        public ActionResult AddFavo(int ProID)
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int UserID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                if(ctx.Favorites.Where(f=>f.UserID==UserID).Any(f=>f.ProID==ProID))
+                {
+                    return Json(null,JsonRequestBehavior.AllowGet);
+                }
+                var model = new Favorite
+                {
+                    UserID = UserID,
+                    ProID = ProID,
+                };
+                ctx.Favorites.Add(model);
+                ctx.SaveChanges();
+                return Json(JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        // POST: Account/Favorite
+        [CheckLogin]
+        public ActionResult Favorite()
+        {
+            ViewBag.Current = "Favorite";
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int UserID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Favorites.Where(f => f.UserID == UserID).ToList();
+                var list= new List<Auction>();
+                foreach(var f in model)
+                {
+                    var pro = ctx.Auctions
+                        .Where(p => p.ProID == f.ProID).FirstOrDefault();
+                    if (pro != null)
+                    {
+                        list.Add(pro);
+                    }
+                }
+                return View(list);
+            }
+        }
+
+        // POST: Account/RemoveFavorite
+        [CheckLogin]
+        [HttpPost]
+        public ActionResult RemoveFavorite(int ProID)
+        {
+            if (CurrentContext.IsLogged() == false)
+            {
+                return Json(null,JsonRequestBehavior.AllowGet);
+            }
+            int UserID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Favorites.Where(f => f.ProID == ProID && f.UserID == UserID)
+                    .FirstOrDefault();
+                ctx.Favorites.Remove(model);
+                ctx.SaveChanges();
+                return Json(JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }
