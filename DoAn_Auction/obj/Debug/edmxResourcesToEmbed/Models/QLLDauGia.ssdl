@@ -5,32 +5,34 @@
       <PropertyRef Name="ID" />
     </Key>
     <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="ProID" Type="int" />
-    <Property Name="UserID" Type="int" />
-    <Property Name="Price" Type="money" />
-    <Property Name="Time" Type="datetime" />
+    <Property Name="ProID" Type="int" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="Price" Type="money" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="Status" Type="bit" Nullable="false" />
+    <Property Name="PriceHighest" Type="money" Nullable="false" />
   </EntityType>
   <EntityType Name="Auctions">
     <Key>
       <PropertyRef Name="ProID" />
     </Key>
     <Property Name="ProID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="ProName" Type="nvarchar" MaxLength="40" />
+    <Property Name="ProName" Type="nvarchar" MaxLength="40" Nullable="false" />
     <Property Name="FullDes" Type="ntext" />
-    <Property Name="PriceStarting" Type="money" />
-    <Property Name="PriceBuy" Type="money" />
-    <Property Name="CatID" Type="int" />
-    <Property Name="PriceHighest" Type="money" />
-    <Property Name="Customer" Type="int" />
-    <Property Name="TimeStart" Type="datetime" />
-    <Property Name="TimeEnd" Type="datetime" />
-    <Property Name="Adjourning" Type="bit" />
-    <Property Name="Status" Type="bit" />
-    <Property Name="Required" Type="int" />
-    <Property Name="Step" Type="money" />
-    <Property Name="Seller" Type="int" />
-    <Property Name="Quantity" Type="int" />
-    <Property Name="PriceCurrent" Type="money" />
+    <Property Name="PriceStarting" Type="money" Nullable="false" />
+    <Property Name="PriceBuy" Type="money" Nullable="false" />
+    <Property Name="CatID" Type="int" Nullable="false" />
+    <Property Name="PriceHighest" Type="money" Nullable="false" />
+    <Property Name="Customer" Type="int" Nullable="false" />
+    <Property Name="TimeStart" Type="datetime" Nullable="false" />
+    <Property Name="TimeEnd" Type="datetime" Nullable="false" />
+    <Property Name="Adjourning" Type="bit" Nullable="false" />
+    <Property Name="Status" Type="bit" Nullable="false" />
+    <Property Name="Required" Type="int" Nullable="false" />
+    <Property Name="Step" Type="money" Nullable="false" />
+    <Property Name="Seller" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="PriceCurrent" Type="money" Nullable="false" />
   </EntityType>
   <EntityType Name="Categories">
     <Key>
@@ -39,6 +41,45 @@
     <Property Name="CatID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="CatName" Type="nvarchar" MaxLength="50" />
     <Property Name="ParentID" Type="int" />
+  </EntityType>
+  <EntityType Name="DesBonus">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProID" Type="int" Nullable="false" />
+    <Property Name="DesBonus" Type="ntext" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Favorites">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserID" Type="int" Nullable="false" />
+    <Property Name="ProID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RegisterSelling">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="UserID" Type="int" />
+    <Property Name="DateStart" Type="datetime" />
+    <Property Name="DateEnd" Type="datetime" />
+    <Property Name="Status" Type="int" />
+    <Property Name="DateSend" Type="datetime" />
+  </EntityType>
+  <EntityType Name="Reviews">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ProID" Type="int" Nullable="false" />
+    <Property Name="Reviewer" Type="int" Nullable="false" />
+    <Property Name="Type" Type="bit" Nullable="false" />
+    <Property Name="Comment" Type="nvarchar" MaxLength="255" />
+    <Property Name="Receiver" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="Users">
     <Key>
@@ -51,14 +92,19 @@
     <Property Name="f_Email" Type="nvarchar" MaxLength="50" />
     <Property Name="f_DOB" Type="datetime" />
     <Property Name="f_Level" Type="int" />
-    <Property Name="f_Rate" Type="int" />
     <Property Name="f_Address" Type="nvarchar" MaxLength="255" />
-    <Property Name="f_Phone" Type="nchar" MaxLength="13" />
+    <Property Name="f_Phone" Type="nvarchar" MaxLength="13" />
+    <Property Name="f_Like" Type="int" />
+    <Property Name="f_Dislike" Type="int" />
   </EntityType>
   <EntityContainer Name="QLDauGiaModelStoreContainer">
     <EntitySet Name="AuctionHistories" EntityType="Self.AuctionHistories" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Auctions" EntityType="Self.Auctions" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Categories" EntityType="Self.Categories" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="DesBonus" EntityType="Self.DesBonus" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Favorites" EntityType="Self.Favorites" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="RegisterSelling" EntityType="Self.RegisterSelling" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Reviews" EntityType="Self.Reviews" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
   </EntityContainer>
 </Schema>

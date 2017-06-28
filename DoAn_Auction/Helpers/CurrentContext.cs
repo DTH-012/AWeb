@@ -13,8 +13,8 @@ namespace DoAn_Auction.Helpers
             var flag = HttpContext.Current.Session["isLogin"];
             if (flag == null || (int)flag == 0)
             {
-                //Kiểm tra thêm thông tin trong cookie
-                //nếu có dùng thông tin trong cookie
+                //Kiểm tra thêm thông tin trong cookies
+                //nếu có dùng thông tin trong cookies
                 //để tái tạo lại session
                 if(HttpContext.Current.Request.Cookies["userID"]!=null)
                 {
@@ -25,7 +25,7 @@ namespace DoAn_Auction.Helpers
                             .Where(u => u.f_ID == userIDCookie)
                             .FirstOrDefault();
                         HttpContext.Current.Session["isLogin"]=1;
-                        HttpContext.Current.Session["user"]=1;
+                        HttpContext.Current.Session["user"] = model;
                      }
 
                     return true;

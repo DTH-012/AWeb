@@ -15,9 +15,11 @@ namespace DoAn_Auction.Models
     public partial class AuctionHistory
     {
         public int ID { get; set; }
-        public Nullable<int> ProID { get; set; }
-        public Nullable<int> UserID { get; set; }
-        public Nullable<decimal> Price { get; set; }
-        public Nullable<System.DateTime> Time { get; set; }
+        public int ProID { get; set; }
+        public int UserID { get; set; }
+        public decimal Price { get; set; }
+        public System.DateTime Time { get; set; }
+        public bool Status { get; set; }
+        public decimal PriceHighest { get; set; }
     }
 }

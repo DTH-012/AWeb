@@ -1,20 +1,22 @@
 ﻿@using DoAn_Auction.Models
 @model List<Category>
 <ul class="nav nav-stacked">
-        @foreach (var cat in Model)
-        {
-    <li>
-        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-            @cat.CatName @if (cat.Categories.Count > 0){<i class="fa fa-angle-right pull-right"></i>}
-        </a>
-        @if (cat.Categories.Count > 0)
-        { 
-        <ul class="dropdown-menu">
-            @foreach (var cat_child in cat.Categories) { 
-            <li><a href="javascript:void(0);">@cat_child.CatName</a></li>
+    @foreach (var cat in Model)
+    {
+        <li>
+            <a class="dropdown-toggle" data-toggle="dropdown" href="@Url.Action("ByCat", "Product", new { id=cat.CatID })">
+                @cat.CatName @if (cat.Categories.Count > 0)
+                {<i class="fa fa-angle-right pull-right"></i>}
+            </a>
+            @if (cat.Categories.Count > 0)
+            {
+                <ul class="dropdown-menu">
+                    @foreach (var cat_child in cat.Categories)
+                    {
+                        <li><a href="@Url.Action("ByCat", "Product", new { id = cat_child.CatID })">@cat_child.CatName</a></li>
+                    }
+                </ul>
             }
-        </ul>
-        }
-    </li>
-        }
+        </li>
+    }
 </ul>

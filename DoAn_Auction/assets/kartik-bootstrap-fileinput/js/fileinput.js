@@ -3111,7 +3111,7 @@
                 'preview': preview,
                 'close': close,
                 'caption': caption,
-                'upload': self._renderButton('upload'),
+                //'upload': self._renderButton('upload'),
                 'remove': self._renderButton('remove'),
                 'cancel': self._renderButton('cancel'),
                 'browse': self._renderButton('browse')

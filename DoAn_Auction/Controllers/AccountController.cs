@@ -13,6 +13,16 @@ namespace DoAn_Auction.Controllers
 {
     public class AccountController : Controller
     {
+        // GET: Account - Menu
+        public ActionResult Menu(string current)
+        {
+            if (current != null)
+            {
+                ViewBag.Current = current;
+            }
+            return PartialView("MenuPartial");
+        }
+
         // GET: Account/Register
         public ActionResult Register()
         {
@@ -55,7 +65,97 @@ namespace DoAn_Auction.Controllers
             }
             return View();
         }
-        
+        public bool IsUsernameUnique(string input)
+        {
+            bool check = true;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Users
+                    .Where(p => p.f_Username == input)
+                    .FirstOrDefault();
+                if (model != null)
+                {
+                    check = false;
+                }
+                return check;
+            }
+        }
+        public bool IsEmailUnique(string input)
+        {
+            bool check = true;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Users
+                    .Where(p => p.f_Email == input)
+                    .FirstOrDefault();
+                if (CurrentContext.IsLogged() == false)
+                {
+                    if (model != null)
+                    {
+                        check = false;
+                    }
+                }
+                else
+                {
+                    var curUser=(User)CurrentContext.GetCurUser();
+                    if(model.f_ID!= curUser.f_ID)
+                    {
+                        return false;
+                    }
+                }
+                return check;
+            }
+        }
+        public bool IsEqualPWD(string input)
+        {
+            bool check = true;
+            string encPwd = StringUtils.MD5(input);
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var uid = CurrentContext.GetCurUser().f_ID;
+                var model = ctx.Users
+                    .Where(p => p.f_ID == uid)
+                    .FirstOrDefault();
+                if (model.f_Password != encPwd)
+                {
+                    check = false;
+                }
+                return check;
+            }
+        }
+        //public JsonResult IsUsernameUnique(string input)
+        //{
+        //    //TODO: Do the validation
+        //    JsonResult result = new JsonResult();
+        //    var ctx = new QLDauGiaEntities();
+        //        var model = ctx.Users
+        //            .Where(p => p.f_Username == input)
+        //            .FirstOrDefault();
+        //        if (model != null)
+        //        {
+        //            result.Data = true;
+        //        }
+        //        result.Data = false;
+        //        return result;
+        //}
+        //public JsonResult IsEmailUnique(string input)
+        //{
+        //    //TODO: Do the validation
+        //    JsonResult result = new JsonResult();
+        //    result.Data = false;
+        //    using (var ctx = new QLDauGiaEntities())
+        //    {
+        //        var model = ctx.Users
+        //            .Where(p => p.f_Email == input)
+        //            .FirstOrDefault();
+        //        if (model != null)
+        //        {
+        //            result.Data = true;
+        //        }
+        //        return result;
+        //    }
+        //}
+
         // POST: Account/Login
         [HttpPost]
         public ActionResult Login(LoginVM model)
@@ -76,7 +176,7 @@ namespace DoAn_Auction.Controllers
                     Session["isLogin"] = 1;
                     Session["user"] = user;
 
-                    if(model.Remember)
+                    if (model.Remember)
                     {
                         Response.Cookies["userID"].Value = user.f_ID.ToString();
                         Response.Cookies["userID"].Expires = DateTime.Now.AddDays(7);
@@ -103,6 +203,11 @@ namespace DoAn_Auction.Controllers
         [CheckLogin]
         public ActionResult Profile()
         {
+            if(CurrentContext.IsLogged()==false)
+            {
+                return RedirectToAction("Register", "Account");
+            }
+            ViewBag.Current = "Profile";
             var ctx = new QLDauGiaEntities();
             int ID =(int) CurrentContext.GetCurUser().f_ID;
             var user = ctx.Users.Where(p => p.f_ID == ID).FirstOrDefault();
@@ -116,6 +221,7 @@ namespace DoAn_Auction.Controllers
             return View();
         }
         // POST: Account/EditProfile
+        [CheckLogin]
         [HttpPost]
         public ActionResult EditProfile(RegisterVM model)
         {
@@ -141,12 +247,15 @@ namespace DoAn_Auction.Controllers
         [CheckLogin]
         public ActionResult ChangePassword()
         {
+            ViewBag.Current = "ChangePassword";
             return View();
         }
         // POST: Account/ChangePassword
+        //[CheckLogin]
         [HttpPost]
         public ActionResult ChangePassword(string RawPWD,string NewRawPWD)
         {
+            ViewBag.Current = "ChangePassword";
             if (CurrentContext.IsLogged() == false)
             {
                 return View();
@@ -167,26 +276,110 @@ namespace DoAn_Auction.Controllers
             }
         }
 
-        // GET: Account/ReviewDetail
+        // GET: Account/AuctionHistory
         [CheckLogin]
-        public ActionResult ReviewDetail()
+        public ActionResult AuctionHistory()
         {
+            if(CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var auhis = ctx.AuctionHistories.Where(p => p.UserID == ID).OrderBy(p=>p.ProID).ToList();
+                return View(auhis);
+            }
+        }
+
+        // GET: Account/Bidding
+        [CheckLogin]
+        public ActionResult Bidding()
+        {
+            ViewBag.Current = "Bidding";
             if (CurrentContext.IsLogged() == false)
             {
                 return View();
             }
-            int UserID = (int)CurrentContext.GetCurUser().f_ID;
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
             using (var ctx = new QLDauGiaEntities())
             {
-                var model = ctx.Reviews
-                    .Where(r => r.Receiver == UserID).ToList();
+                var result = ctx.AuctionHistories
+                    .Where(p => p.UserID == ID && p.Status==true)
+                    .Select(p => p.ProID)
+                    .Distinct().ToList();
+                var proID = new List<int>();
+                var dsSp = new List<Auction>();
+                foreach(var p in result)
+                {
+                    var pro = ctx.Auctions.Where(a => a.ProID == p).FirstOrDefault();
+                    if (pro.Status == true)
+                    {
+                        proID.Add(p);
+                        dsSp.Add(pro);
+                    }
+                }
+                ViewBag.ProID = proID;
+                //var result = from a in ctx.Auctions
+                //              join ah in ctx.AuctionHistories on a.ProID equals ah.ProID
+                //              where ah.UserID == ID
+                //              group a by a.ProID into a
+                //              //into g
+                //              select a;
+                //var auhis = ctx.AuctionHistories.Where(p => p.UserID == ID).OrderBy(p => p.ProID).ToList();
+                //ViewBag.ProBid =result.ToList();
+                //var model = ctx.AuctionHistories.Where(p => p.UserID == ID).GroupBy(p=>p.ProID).ToList();
+                //var list = new List<Auction>();
+                //foreach (var p in result.ToList())
+                //{
+                //    list.Add(p);
+                //}
+                return View(dsSp);
+            }
+        }
+
+        // GET: Account/YourProduct
+        [CheckLogin]
+        public ActionResult YourProduct()
+        {
+            ViewBag.Current = "YourProduct";
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Auctions
+                    .Where(p => p.Seller == ID && p.Status==true).ToList();
                 return View(model);
             }
         }
 
-		        [HttpPost]
+        // GET: Account/YourCustomer
+        [CheckLogin]
+        public ActionResult YourCustomer()
+        {
+            ViewBag.Current = "YourCustomer";
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Auctions
+                    .Where(p => p.Seller == ID && p.Status == false && p.Customer!=0).ToList();
+                return View(model);
+            }
+        }
+        // GET: Account/YourCustomer
+        //Review
+        [CheckLogin]
+        [HttpPost]
         public ActionResult YourCustomer(Review r)
         {
+            ViewBag.Current = "YourCustomer";
             if (CurrentContext.IsLogged() == false)
             {
                 return View();
@@ -211,7 +404,77 @@ namespace DoAn_Auction.Controllers
                 return View(model);
             }
         }
-		// POST: Account/Favorite
+
+        // GET: Account/BidWin
+        [CheckLogin]
+        public ActionResult BidWin()
+        {
+            ViewBag.Current = "BidWin";
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Auctions
+                    .Where(p => p.Customer == ID && p.Status == false).ToList();
+                return View(model);
+            }
+        }
+
+        // POST: Account/BidWin
+        //Review
+        [CheckLogin]
+        [HttpPost]
+        public ActionResult BidWin(Review r)
+        {
+            ViewBag.Current = "BidWin";
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int ID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var receiver = ctx.Users.Where(u => u.f_ID == r.Receiver).FirstOrDefault();
+                if(r.Type==true)
+                {
+                    receiver.f_Like++;
+                }
+                else if(r.Type==false)
+                {
+                    receiver.f_Dislike++;
+                }
+                ctx.Reviews.Add(r);
+                ctx.Entry(receiver).State = System.Data.Entity.EntityState.Modified;
+                ctx.SaveChanges();
+                var model = ctx.Auctions
+                   .Where(p => p.Customer == ID && p.Status == false).ToList();
+                return View(model);
+            }
+        }
+
+        // GET: Account/ReviewDetail
+        [CheckLogin]
+        public ActionResult ReviewDetail()
+        {
+            ViewBag.Current = "ReviewDetail";
+            if (CurrentContext.IsLogged() == false)
+            {
+                return View();
+            }
+            int UserID = (int)CurrentContext.GetCurUser().f_ID;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Reviews
+                    .Where(r => r.Receiver == UserID).ToList();
+                return View(model);
+            }
+        }
+
+
+        // POST: Account/Favorite
         [HttpPost]
         public ActionResult AddFavo(int ProID)
         {
@@ -282,6 +545,60 @@ namespace DoAn_Auction.Controllers
                 ctx.SaveChanges();
                 return Json(JsonRequestBehavior.AllowGet);
             }
+        }
+        public bool IsEmailExit(string input)
+        {
+            bool check = true;
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var model = ctx.Users
+                    .Where(p => p.f_Email == input)
+                    .FirstOrDefault();
+                if (model== null)
+                {
+                    check = false;
+                }
+                return check;
+            }
+        }
+
+        // GET: Account/Recover
+        public ActionResult Recover()
+        {
+            if(CurrentContext.IsLogged()==true)
+            {
+                return RedirectToAction("Index","Home");
+            }
+            return View();
+        }
+
+        // POST: Account/Recover
+        [HttpPost]
+        public ActionResult Recover(string Email)
+        {
+            if (CurrentContext.IsLogged() == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            using (var ctx = new QLDauGiaEntities())
+            {
+                var user = ctx.Users.Where(u => u.f_Email == Email).FirstOrDefault();
+                var random=new Random().Next( 10000000, 99999999);
+                var newPWD = StringUtils.MD5(random.ToString());
+                user.f_Password = newPWD.ToString();
+                ctx.Entry(user).State = System.Data.Entity.EntityState.Modified;
+                ctx.SaveChanges();
+
+                //Send email
+                string content = System.IO.File.ReadAllText(Server.MapPath("~/assets/mailMsg/tplResetPWD.html"));
+                content = content.Replace("{{UName}}", user.f_Name);
+                content = content.Replace("{{NewPWD}}", random.ToString());
+                content = content.Replace("{{Home}}", Url.Action("Index", "Home", null, this.Request.Url.Scheme).ToString());
+                MailHelper.SendEmail(user.f_Email, "Tài khoản của bạn bị thay đổi", content);
+                TempData["ErrorMsg"]=null;
+                TempData["ErrorMsg"] = "Chúng tôi đã reset mật khẩu của bạn, kiểm tra email để biết thêm chi tiết !";
+            }
+            return RedirectToAction("Register","Account");
         }
     }
 }

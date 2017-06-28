@@ -25,9 +25,13 @@ namespace DoAn_Auction.Models
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Auction> Auctions { get; set; }
+        public virtual DbSet<Review> Reviews { get; set; }
+        public virtual DbSet<RegisterSelling> RegisterSellings { get; set; }
+        public virtual DbSet<Favorite> Favorites { get; set; }
+        public virtual DbSet<DesBonu> DesBonus { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<AuctionHistory> AuctionHistories { get; set; }
+        public virtual DbSet<Auction> Auctions { get; set; }
     }
 }

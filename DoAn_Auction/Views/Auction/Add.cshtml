@@ -5,6 +5,10 @@
 }
 @section css
 {
+    @if (@ViewBag.ProID > 0)
+    {
+        <meta http-equiv="refresh" content="4;url=@Url.Action("Detail", "Product", new { id = ViewBag.ProID })" />
+    }
     <link href="~/assets/bootstrap-datepicker-master/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
     <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
     <link href="~/assets/bootstrap-touchspin/jquery.bootstrap-touchspin.css" rel="stylesheet" />
@@ -21,6 +25,9 @@
             display:inline;
             float: none;
         }*/
+        .help-clock {
+            color: #a94442;
+        }
     </style>
 }
 @section js
@@ -32,13 +39,151 @@
     <script src="~/assets/bootstrap-datepicker-master/js/bootstrap-datepicker.min.js"></script>
     <script src="~/assets/js/mimity.js"></script>
     <script src="~/assets/bootstrap-touchspin/jquery.bootstrap-touchspin.min.js"></script>
-<script src="~/assets/kartik-bootstrap-fileinput/js/fileinput.js"></script>
-<script src="~/assets/kartik-bootstrap-fileinput/themes/fa/theme.js"></script>
-<script src="~/assets/kartik-bootstrap-fileinput/themes/fa/theme.min.js"></script>
+    <script src="~/assets/kartik-bootstrap-fileinput/js/fileinput.js"></script>
+    <script src="~/assets/kartik-bootstrap-fileinput/themes/fa/theme.js"></script>
+    <script src="~/assets/kartik-bootstrap-fileinput/themes/fa/theme.min.js"></script>
 
     <script>
         //$('input[type=file]').bootstrapFileInput();
+        jQuery.validator.addMethod("UniqueUser", function (value, element) {
+            var url = '/Account/IsUsernameUnique/?input=' + value;
+            var ret = false;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                async: false,
+                success: function (data) {
+                    ret = data;
+                    console.log(data);
+                }
+            });
+            if (ret == "True") {
+                return true;
+            }
+            if (ret == "False") {
+                return false;
+            }
+        }, "Username đã tồn tại");
+        jQuery.validator.addMethod("UniqueEmail", function (value, element) {
+            var url = '/Account/IsEmailUnique/?input=' + value;
+            var ret = false;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                async: false,
+                success: function (data) {
+                    ret = data;
+                    console.log(data);
+                }
+            });
+            if (ret == "True") {
+                return true;
+            }
+            if (ret == "False") {
+                return false;
+            }
+        }, "Email đã tồn tại");
+        $('#frmAddAuction').validate({
+            //highlight: function (element) {
+            //    var id_attr = "#" + $(element).attr("id") + "1";
+            //    $(element).closest('.form-group').addClass('has-error');
+            //    $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            //},
+            highlight: function (element) {
+                //var id_attr = "#" + $(element).attr("id") + "1";
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                //$(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            },
 
+            unhighlight: function (element) {
+                //var id_attr = "#" + $(element).attr("id") + "1";
+                $(element).closest('.form-group').removeClass('has-error');
+                //$(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+            },
+            errorElement: 'span',
+            errorClass: 'help-clock',
+            rules: {
+                ProName: {
+                    required: true,
+                    minlength: 8,
+                    //remote: {
+                    //    url: "/Account/IsUsernameUnique/",
+                    //    type: "post",
+                    //    data: function () {
+                    //            return $("#txtUsername").val();
+                    //    }
+                    //}
+                },
+                CatID: {
+                    required: true,
+                },
+                PriceStarting: {
+                    required: true,
+                    digits: true,
+                },
+                PriceBuy: {
+                    required: true,
+                    digits: true,
+                },
+                Step: {
+                    required: true,
+                    digits: true,
+                },
+                Quantity: {
+                    required: true,
+                    digits: true,
+                },
+                TimeEnd: {
+                    required: true,
+                    digits: true,
+                },
+                Required: {
+                    required: true,
+                    digits: true,
+                },
+                mainPic: {
+                    required: true,
+                },
+            },
+
+            messages: {
+                ProName: {
+                    required: "Vui lòng nhập tên sản phẩm",
+                    minlength: "Tên sản phẩm tối thiểu 8 kí tự"
+                },
+                CatID: {
+                    required: "Vui lòng chọn danh mục",
+                },
+                PriceStarting: {
+                    required: "Vui lòng nhập giá khởi điểm",
+                    digits: "Giá khởi điểm không hợp lệ"
+                },
+                PriceBuy: {
+                    required: "Vui lòng nhập giá mua ngay",
+                    digits: "Giá mua ngay không hợp lệ"
+                },
+                Step: {
+                    required: "Vui lòng nhập bước giá",
+                    digits: "Bước giá không hợp lệ"
+                },
+                Quantity: {
+                    required: "Vui lòng nhập số lượng",
+                    digits: "Số lượng không hợp lệ"
+                },
+                TimeEnd: {
+                    required: "Vui lòng nhập thời gian kết thúc",
+                    digits: "Thời gian kết thúc không hợp lệ"
+                },
+                Required: {
+                    required: "Vui lòng nhập yêu cầu rating",
+                    digits: "Rating không hợp lệ"
+                },
+                mainPic: {
+                    required: "Vui lòng chọn hình đại diện"
+                },
+            }
+        });
+        $("div.alert").delay(4000).slideUp();
         tinymce.init({
             selector: '#txtFullDes',
             menubar: false,
@@ -56,7 +201,7 @@
         });
         $('#txtPriceBuy').TouchSpin({
             verticalbuttons: true,
-            min: 20000,
+            min: 0,
             max: 1000000000,
             step: 1000,
             initval: 20000,
@@ -79,7 +224,7 @@
         });
         $('#txtRequired').TouchSpin({
             verticalbuttons: true,
-            min: 1,
+            min: 0,
             max: 100,
             step: 1,
             initval: 50,
@@ -114,13 +259,134 @@
 <div class="breadcrumb-container">
     <div class="container">
         <ol class="breadcrumb">
-            <li><a href="index.html">Trang chủ</a></li>
+            <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
             <li class="active">Đấu giá</li>
         </ol>
     </div>
 </div>
 <!-- End Breadcrumbs -->
-@if (CurrentContext.GetCurUser().f_Level < 2)
+@*@if(CurrentContext.IsLogged()==true)
+    {*@
+@if (CurrentContext.GetCurUser().f_Level > 1 || ViewBag.CheckSelling == "2")
+{
+    <!-- Main Content -->
+    <div class="container m-t-3">
+        <div class="row">
+            @if (ViewBag.ErrorMsg == null)
+            {
+                ViewBag.ErrorMsg = TempData["ErrorMsg"];
+                TempData["ErrorMsg"] = null;
+            }
+            @if (@ViewBag.ErrorMsg != null)
+            {
+                <div class="form-group col-md-12 ">
+                    <div class="alert alert-warning">
+                        <strong>Warning! </strong>@ViewBag.ErrorMsg
+                    </div>
+                </div>
+            }
+            @if (@ViewBag.Success != null)
+            {
+                <div class="form-group col-md-12 ">
+                    <div class="alert alert-success">
+                        @ViewBag.Success
+                    </div>
+                </div>
+            }
+            <!-- Checkout Form -->
+            <div class="col-md-9">
+                <div class="title"><span>Đăng đấu giá mới</span></div>
+                <form id="frmAddAuction" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label" for="txtProName">Tên sản phẩm</label>
+                                <input type="text" class="form-control" id="txtProName" placeholder="Tên sản phẩm" name="ProName">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtPriceStarting">Giá khởi điểm</label>
+                                <input type="text" class="form-control" id="txtPriceStarting" placeholder="Giá khởi điểm" name="PriceStarting">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtStep">Bước giá</label>
+                                <input type="text" class="form-control" id="txtStep" placeholder="Bước giá" name="Step">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtRequired">Yêu cầu rating</label>
+                                <input type="text" class="form-control" id="txtRequired" placeholder="Yêu cầu về điểm rating của người đấu giá" name="Required">
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label class="control-label" for="cboCatID">Loại sản phẩm</label>
+                                <select class="form-control selectpicker" id="cboCatID" data-live-search="true" name="CatID">
+                                    @*<option value=""> --- Please Select --- </option>*@
+                                    @foreach (var cat in ViewBag.Parent)
+                                    {
+                                        <optgroup label="@cat.CatName">
+                                            @foreach (var cat_child in cat.Categories)
+                                            {
+                                                <option value="@cat_child.CatID">@cat_child.CatName</option>
+                                            }
+                                        </optgroup>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtPriceBuy">Giá mua ngay</label>
+                                <input type="text" class="form-control" id="txtPriceBuy" placeholder="Giá mua ngay" name="PriceBuy">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" for="txtQuantity">Số lượng</label>
+                                <input type="text" class="form-control" id="txtQuantity" placeholder="Số lượng" name="Quantity">
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label" id="lblTimeEnd" for="txtTimeEnd">Thời gian kết thúc</label>
+                                <input type="text" class="form-control form-inline" id="txtTimeEnd" placeholder="5" name="TimeEnd">
+                            </div>
+                        </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label" for="txtFullDes">Mô tả chi tiết</label>
+                                <textarea class="form-control" rows="3" id="txtFullDes" name="FullDes"></textarea>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label">Hình đại diện</label>
+                                <input id="input-main" name="mainPic" type="file" class="file">
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label class="control-label">Hình chi tiết</label>
+                                <input id="input-fa" name="subPic" type="file" multiple class="file-loading">
+                            </div>
+
+                            <div class="form-group" hidden="hidden">
+                                <label for="txtPriceStarting">ID</label>
+                                <input type="text" class="form-control" id="txtProID" placeholder="ID" name="ProID">
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label for="txtPriceStarting"> Tự động gia hạn</label>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" name="Adjourning" value="true"><span> Khi có lượt đấu giá mới trước khi kết thúc 5 phút, sản phẩm tự động gia hạn thêm 10 phút</span>
+                                        <input type="checkbox" name="Adjourning" value="false" hidden>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    <nav aria-label="Checkout Next Navigation">
+                        <ul class="pager">
+                            <li class="previous"><a href="@Url.Action("Index","Home")"><span aria-hidden="true">&larr;</span>Về trang chủ</a></li>
+                            <li><button type="submit" class="btn btn-theme"><i class="fa fa-check"></i> Đăng sản phẩm</button></li>
+                            <li class="next"><a href="@Url.Action("Index","Product")">Danh sách sản phẩm<span aria-hidden="true">&rarr;</span></a></li>
+                        </ul>
+                    </nav>
+                </form>
+            </div>
+            <!-- End Checkout Form -->
+        </div>
+    </div>
+    <!-- End Main Content -->
+}
+else
 {
     if (ViewBag.CheckSelling == "1")
     {
@@ -141,10 +407,10 @@
             </div>
         </div>
     }
-    else if (ViewBag.CheckSelling==null)
-    { 
-    <div class="container m-t-3">
-        <div class="row">
+    else if (ViewBag.CheckSelling == null)
+    {
+        <div class="container m-t-3">
+            <div class="row">
                 <div class="col-md-9">
                     <div class="title"><span>Đăng ký đăng bán sản phẩm</span></div>
                     <form method="post" action="@Url.Action("RegisterSelling","Auction")">
@@ -160,120 +426,6 @@
                     </form>
                 </div>
             </div>
-    </div>
-    }
-}
-else
-{
-<!-- Main Content -->
-<div class="container m-t-3">
-    <div class="row">
-        @if (ViewBag.ErrorMsg == null)
-        {
-            ViewBag.ErrorMsg = TempData["ErrorMsg"];
-            TempData["ErrorMsg"] = null;
-        }
-        @if (@ViewBag.ErrorMsg != null)
-        {
-            <div class="form-group col-md-12 ">
-                <div class="alert alert-warning">
-                    <strong>Warning! </strong>@ViewBag.ErrorMsg
-                </div>
-            </div>
-        }
-        @if (@ViewBag.Success != null)
-        {
-            <div class="form-group col-md-12 ">
-                <div class="alert alert-success">
-                    @ViewBag.Success
-                </div>
-            </div>
-        }
-        <!-- Checkout Form -->
-        <div class="col-md-9">
-            <div class="title"><span>Đăng đấu giá mới</span></div>
-            <form method="post" enctype="multipart/form-data">
-                <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label for="txtProName">Tên sản phẩm</label>
-                        <input type="text" class="form-control" id="txtProName" placeholder="Tên sản phẩm" name="ProName">
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="cboCatID">Loại sản phẩm</label>
-                        <select class="form-control selectpicker" id="cboCatID" data-live-search="true" name="CatID">
-                            @*<option value=""> --- Please Select --- </option>*@
-                            @foreach (var cat in ViewBag.Parent)
-                            {
-                                <optgroup label="@cat.CatName">
-                                    @foreach (var cat_child in cat.Categories)
-                                    {
-                                        <option value="@cat_child.CatID">@cat_child.CatName</option>
-                                    }
-                                </optgroup>
-                            }
-                        </select>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="txtPriceStarting">Giá khởi điểm</label>
-                        <input type="text" class="form-control" id="txtPriceStarting" placeholder="Giá khởi điểm" name="PriceStarting">
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="txtPriceBuy">Giá mua ngay</label>
-                        <input type="text" class="form-control" id="txtPriceBuy" placeholder="Giá mua ngay" name="PriceBuy">
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="txtStep">Bước giá</label>
-                        <input type="text" class="form-control" id="txtStep" placeholder="Bước giá" name="Step">
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="txtQuantity">Số lượng</label>
-                        <input type="text" class="form-control" id="txtQuantity" placeholder="Số lượng" name="Quantity">
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="txtRequired">Yêu cầu rating</label>
-                        <input type="text" class="form-control" id="txtRequired" placeholder="Yêu cầu về điểm rating của người đấu giá" name="Required">
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label id="lblTimeEnd" for="txtTimeEnd">Thời gian kết thúc</label>
-                        <input type="text" class="form-control form-inline" id="txtTimeEnd" placeholder="5" name="TimeEnd">
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label for="addressInput">Mô tả chi tiết</label>
-                        <textarea class="form-control" rows="3" id="txtFullDes" name="FullDes"></textarea>
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label">Hình đại diện</label>
-                        <input id="input-main" name="mainPic" type="file" class="file">
-                    </div>
-                    <div class="form-group col-sm-12">
-                        <label class="control-label">Hình chi tiết</label>
-                        <input id="input-fa" name="subPic" type="file" multiple class="file-loading">
-                    </div>
-
-                    <div class="form-group col-sm-6" hidden="hidden">
-                        <label for="txtPriceStarting">ID</label>
-                        <input type="text" class="form-control" id="txtProID" placeholder="ID" name="ProID">
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="txtPriceStarting">Tự động gia hạn</label>
-                        <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="Adjourning"><span>khi có lượt đấu giá mới trước khi kết thúc 5 phút, sản phẩm tự động gia hạn thêm 10 phút</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-                <nav aria-label="Checkout Next Navigation">
-                    <ul class="pager">
-                        <li class="previous"><a href="@Url.Action("Index","Home")"><span aria-hidden="true">&larr;</span>Về trang chủ</a></li>
-                        <li><button type="submit" class="btn btn-theme"><i class="fa fa-check"></i> Đăng sản phẩm</button></li>
-                        <li class="next"><a href="@Url.Action("Index","Product")">Danh sách sản phẩm<span aria-hidden="true">&rarr;</span></a></li>
-                    </ul>
-                </nav>
-            </form>
         </div>
-        <!-- End Checkout Form -->
-    </div>
-</div>
-<!-- End Main Content -->
+    }
 }

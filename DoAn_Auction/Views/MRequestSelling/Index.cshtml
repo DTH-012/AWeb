@@ -27,7 +27,8 @@
                 .done(function (data) {
                     //location.reload();
                 });
-                $(this).remove();
+                $(this).parents('tr').first().remove();
+                //$(this).remove();
             });
         });
     </script>
@@ -60,7 +61,7 @@
                     <tbody>
                         @foreach (var r in Model)
                         {
-                            <tr class="accept">
+                            <tr class="">
                                 @*<td></td>*@
                                 @{
                             var ctx = new QLDauGiaEntities();

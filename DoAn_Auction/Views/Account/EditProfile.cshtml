@@ -8,6 +8,12 @@
 {
     <link href="~/assets/bootstrap-datepicker-master/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
     <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .help-clock {
+            color: #a94442;
+        }
+    </style>
 }
 @section js
 {
@@ -20,6 +26,98 @@
         $('.datepicker').datepicker({
             format: 'd/m/yyyy',
             autoclose: true
+        });
+        jQuery.validator.addMethod("UniqueEmail", function (value, element) {
+            var url = '/Account/IsEmailUnique/?input=' + value;
+            var ret = false;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                async: false,
+                success: function (data) {
+                    ret = data;
+                    console.log(data);
+                }
+            });
+            if (ret == "True") {
+                return true;
+            }
+            if (ret == "False") {
+                return false;
+            }
+        }, "Email đã tồn tại");
+        $('#frmEdit').validate({
+            //highlight: function (element) {
+            //    var id_attr = "#" + $(element).attr("id") + "1";
+            //    $(element).closest('.form-group').addClass('has-error');
+            //    $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            //},
+            highlight: function (element) {
+                //var id_attr = "#" + $(element).attr("id") + "1";
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                //$(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            },
+
+            unhighlight: function (element) {
+                //var id_attr = "#" + $(element).attr("id") + "1";
+                $(element).closest('.form-group').removeClass('has-error');
+                //$(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+            },
+            errorElement: 'span',
+            errorClass: 'help-clock',
+            rules: {
+                RawPWD: {
+                    required: true,
+                },
+                Name: {
+                    required: true,
+                    minlength: 6
+                },
+                Email: {
+                    required: true,
+                    email: true,
+                    UniqueEmail: true,
+                },
+                DOB: {
+                    required: true
+                },
+                Address: {
+                    required: true,
+                },
+                Phone: {
+                    required: true,
+                    digits: true,
+                    minlength: 9,
+                    maxlength: 11,
+                }
+            },
+
+            messages: {
+                PWD: {
+                    required: "Vui lòng nhập mật khẩu",
+                },
+                Name: {
+                    required: "Vui lòng nhập họ tên",
+                    minlength: "Tên phải tối thiểu 6 kí tự"
+                },
+                Email: {
+                    required: "Vui lòng nhập email",
+                    email: "Email không hợp lệ",
+                    UniqueEmail: "Email đã tồn tại"
+                },
+                DOB: {
+                    required: "Vui lòng chọn ngày sinh"
+                },
+                Address: {
+                    required: "Vui lòng nhập đại chỉ",
+                },
+                Phone: {
+                    required: "Vui lòng nhập số điện thoại",
+                    digits: "Số điện thoại không hợp lệ",
+                    minlength: "Số điện thoại không hợp lệ",
+                    maxlength: "Số điện thoại không hợp lệ",
+                }
+            }
         });
     </script>
 }
@@ -39,16 +137,17 @@
 
         <!-- Account Sidebar -->
         <div class="col-sm-4 col-md-3 m-b-3">
-            <div class="account-picture"><img src="~/Images/demo/user.png" alt="" class="img-circle img-responsive"></div>
-            <h4 class="text-center m-b-3">John Thor</h4>
-            <ul class="nav nav-pills nav-stacked">
+            @*<div class="account-picture"><img src="~/Images/demo/user.png" alt="" class="img-circle img-responsive"></div>
+            <h4 class="text-center m-b-3">John Thor</h4>*@
+            @Html.Action("Menu", "Account", new { current = ViewBag.Current })
+            @*<ul class="nav nav-pills nav-stacked">
                 <li role="presentation"><a href="@Url.Action("Profile","Account")">Thông tin tài khoản</a></li>
                 <li role="presentation"><a href="@Url.Action("ChangePassword","Account")">Đổi mật khẩu</a></li>
                 <li role="presentation"><a href="@Url.Action("AuctionHistory","Account")">Lịch sử đấu giá</a></li>
                 <li role="presentation" class="active"><a href="@Url.Action("Bidding","Account")">Sản phẩm đang đấu giá</a></li>
                 <li role="presentation"><a href="@Url.Action("YourProduct", "Account")">Sản phẩm đang được đấu giá</a></li>
                 <li role="presentation"><a href="@Url.Action("YourCustomer", "Account")">Sản phẩm đã có người mua</a></li>
-            </ul>
+            </ul>*@
         </div>
         <!-- End Account Sidebar -->
         <!-- My Profile Content -->
@@ -56,40 +155,40 @@
             <div class="title m-b-2"><span>My Profile</span></div>
             <div class="row">
                 <div class="col-xs-12">
-                    <form method="post" action="" id="frmRegister">
+                    <form method="post" action="" id="frmEdit">
                         <div class="form-group col-sm-12" hidden>
-                            <label for="txtUsername">Tên đăng nhập</label>
+                            <label class="control-label" for="txtUsername">Tên đăng nhập</label>
                             <input type="text" class="form-control" id="txtUsername" placeholder="Tên đăng nhập"
                                    name="Username" value="@CurrentContext.GetCurUser().f_Username">
                         </div>
                         <div class="form-group col-sm-12">
-                            <label for="txtEmail">Email</label>
+                            <label class="control-label" for="txtEmail">Email</label>
                             <input type="email" class="form-control" id="txtEmail" placeholder="Email" name="Email"
                                    value="@CurrentContext.GetCurUser().f_Email">
                         </div>
                         <div class="form-group col-sm-12">
-                            <label for="txtName">Họ tên</label>
+                            <label class="control-label" for="txtName">Họ tên</label>
                             <input type="text" class="form-control" id="txtName" placeholder="Name" name="Name"
                                    value="@CurrentContext.GetCurUser().f_Name">
                         </div>
                         <div class="form-group col-sm-12">
-                            <label for="txtDOB">Ngày sinh</label>
+                            <label class="control-label" for="txtDOB">Ngày sinh</label>
                             <input type="text" class="form-control datepicker" id="txtDOB" placeholder="d/m/yyyy"
                                    name="DOB" readonly value="@Convert.ToString(string.Format("{0:dd/MM/yyyy}", CurrentContext.GetCurUser().f_DOB))">
                         </div>
                         <div class="form-group col-sm-12">
-                            <label for="txtAddress">Địa chỉ</label>
+                            <label class="control-label" for="txtAddress">Địa chỉ</label>
                             <input type="text" class="form-control" rows="3" id="txtAddress" name="Address" placeholder="Địa chỉ"
                                    value="@CurrentContext.GetCurUser().f_Address" />
                                 
                         </div>
                         <div class="form-group col-sm-12">
-                            <label for="txtPhone">Số điện thoại</label>
+                            <label class="control-label" for="txtPhone">Số điện thoại</label>
                             <input type="text" class="form-control" id="txtPhone" placeholder="Ví dụ: 086400522 hoặc 0123456789"
                                    name="Phone" value="@CurrentContext.GetCurUser().f_Phone">
                         </div>
                         <div class="form-group col-sm-12">
-                            <label for="txtPWD">Password</label>
+                            <label class="control-label" for="txtPWD">Password</label>
                             <input type="password" class="form-control" id="txtPWD" placeholder="Password" name="RawPWD">
                         </div>
                                 @*<div class="col-xs-12">

@@ -23,18 +23,39 @@ namespace DoAn_Auction.Controllers
                 return View();
             }
             QLDauGiaEntities ctx = new QLDauGiaEntities();
+            ViewBag.Parent = ctx.Categories
+                    .Where(c => c.ParentID == 0).ToList();
             int UserID = CurrentContext.GetCurUser().f_ID;
-            var CheckSelling = ctx.RegisterSellings.Where(p => p.Status == 1 && p.UserID == UserID).FirstOrDefault();
+            var user = ctx.Users
+                .Where(u => u.f_ID == UserID).FirstOrDefault();
+            var canSell = ctx.RegisterSellings
+                .Where(p => p.Status == 2 && p.UserID == UserID).FirstOrDefault();
+            var CheckSelling = ctx.RegisterSellings
+                .Where(p => p.Status == 1 && p.UserID == UserID).FirstOrDefault();
+            if(user.f_Level>1)
+            {
+                ViewBag.CheckSelling = "2";
+                return View();
+            }
+            else
+            {
+                if(canSell!=null)
+                {
+                    ViewBag.CheckSelling = "2";
+                    return View();
+
+                }
+            }
             if (CheckSelling!=null)
             {
                 ViewBag.CheckSelling = "1";
+                return View();
             }
-            ViewBag.Parent = ctx.Categories
-                    .Where(c => c.ParentID == 0).ToList();
             return View();
         }
 
         // Post: Auction/Add
+        [CheckLogin]
         [HttpPost]
         //Quan trọng: upload picture, form bên view phải có encytype
         public ActionResult Add(AuctionVM avm, HttpPostedFileBase mainPic, IEnumerable<HttpPostedFileBase> subPic)
@@ -148,10 +169,90 @@ namespace DoAn_Auction.Controllers
             //QLDauGiaEntities ctx = new QLDauGiaEntities();
             ViewBag.Parent = ctx.Categories
                     .Where(c => c.ParentID == 0).ToList();
+            ViewBag.ProID = u.ProID;
             return View();
         }
 
+        //public ActionResult AddPicture()
+        //{
+        //    return View();
+        //}
+        //[HttpPost]
+        //public ActionResult AddPicture(HttpPostedFileBase mainPic, IEnumerable<HttpPostedFileBase> subPic)
+        //{
+        //    if (mainPic != null && mainPic.ContentLength > 0)
+        //    {
+        //        //tạo folder chứa hình Images/sp/[ID product]
+        //        string spDirPath = Server.MapPath("~/Images/sp");
+        //        string targetDirPath = Path.Combine(spDirPath, 1.ToString());
+
+        //        string spLargeDirPath = Server.MapPath("~/Images/sp/Large");
+        //        string targetLargeDirPath = Path.Combine(spLargeDirPath, 1.ToString());
+
+        //        Directory.CreateDirectory(targetDirPath);
+        //        Directory.CreateDirectory(targetLargeDirPath);
+        //        //
+        //        //copy hình main lên
+        //        string mainFileName = Path.Combine(targetDirPath, "main.jpg");
+        //        WebImage imgMain = new WebImage(mainPic.InputStream);
+        //        WebImage imgMainLarge = imgMain;
+        //        if (imgMain.Width / 440 > 1 || imgMain.Height / 600 > 1)
+        //        {
+        //            int mw = imgMain.Width / 440;
+        //            int mh = imgMain.Height / 600;
+        //            imgMain.Resize(imgMain.Width / mw, imgMain.Height / mh);
+        //        }
+        //        imgMain.Save(mainFileName, "jpg");
+        //        //
+        //        //mainPic.SaveAs(mainFileName);
+        //        //copy hình zoom main
+        //        string imgMainLargeName = Path.Combine(targetLargeDirPath, "main.jpg");
+        //        int smw = 1025 / imgMainLarge.Width;
+        //        int smh = 1400 / imgMainLarge.Height;
+        //        imgMainLarge.Resize(imgMainLarge.Width*smw, imgMainLarge.Height*smh);
+        //        imgMainLarge.Save(imgMainLargeName, "jpg");
+        //        //
+        //        //Sub picture
+        //        int i = 0;
+        //        foreach (var file in subPic)
+        //        {
+        //            if (file != null && file.ContentLength > 0)
+        //            {
+        //                i++;
+
+        //                string imgName = Path.Combine(targetDirPath, i.ToString() + ".jpg");
+        //                WebImage imgFile = new WebImage(file.InputStream);
+        //                WebImage imgLarge = imgFile;
+        //                //imgLarge.Equals(imgFile);
+        //                if (imgFile.Width / 440 > 1 || imgFile.Height / 600 > 1)
+        //                {
+        //                    int w = imgFile.Width / 440;
+        //                    int h = imgFile.Height / 600;
+        //                    imgFile.Resize(imgFile.Width / w, imgFile.Height / h);
+        //                }
+        //                imgFile.Save(imgName, "jpg");
+        //                //file.SaveAs(imgName);
+
+        //                string imgLargeName = Path.Combine(targetLargeDirPath, i.ToString());
+        //                //WebImage imgLarge = new WebImage(imgFile.);
+        //                int sw = 1025 / imgLarge.Width;
+        //                int sh = 1400 / imgLarge.Height;
+        //                imgLarge.Resize(imgLarge.Width * sw, imgLarge.Height * sh);
+        //                imgLarge.Save(imgLargeName, "jpg");
+        //                ViewBag.Success = "thành công";
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        ViewBag.ErrorMsg = "ko thành công";
+        //    }
+        //    return View();
+        //}
+
+
         // POST: Auction/RegisterSelling
+        [CheckLogin]
         [HttpPost]
         public ActionResult RegisterSelling()
         {
@@ -161,6 +262,7 @@ namespace DoAn_Auction.Controllers
                 UserID=CurrentContext.GetCurUser().f_ID,
                 DateStart=null,
                 DateEnd=null,
+                DateSend=DateTime.Now,
                 Status=1,
             };
             ctx.RegisterSellings.Add(rs);

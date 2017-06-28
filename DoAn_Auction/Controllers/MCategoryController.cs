@@ -1,24 +1,4 @@
 ﻿using DoAn_Auction.Filters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-
-namespace DoAn_Auction.Controllers
-{
-    [CheckLogin(RequiredPermission=3)]
-    public class MCategoryController : Controller
-    {
-        // GET: MCategory
-        public ActionResult Index()
-        {
-            return View();
-        }
-
-
-        // GET: MCategory/Add
-        public ActionResult Add()using DoAn_Auction.Filters;
 using DoAn_Auction.Models;
 using System;
 using System.Collections.Generic;
@@ -63,10 +43,23 @@ namespace DoAn_Auction.Controllers
             ViewBag.Current = "Category";
             using (var ctx = new QLDauGiaEntities())
             {
+                //if (model.CatID == 0)
+                //{
+                //    var temp = true;
+                //    //var cate = new Category
+                //    //{
+                //    //    CatName = model.CatName,
+                //    //    ParentID = 0,
+                //    //};
+                //    model.ParentID = 0;
+                //    ctx.Categories.Add(model);
+                //    ctx.SaveChanges();
+                //    return RedirectToAction("Index", "MCategory");
+                //}
                 ctx.Categories.Add(model);
                 ctx.SaveChanges();
-                var cat = ctx.Categories.Where(c => c.ParentID != 0)
-                    .ToList();
+                //var cat = ctx.Categories.Where(c => c.ParentID != 0)
+                //    .ToList();
                 return RedirectToAction("Index", "MCategory");
             }
         }
@@ -128,11 +121,6 @@ namespace DoAn_Auction.Controllers
                 ctx.SaveChanges();
                 return RedirectToAction("Index", "MCategory");
             }
-        }
-    }
-}
-        {
-            return View();
         }
     }
 }

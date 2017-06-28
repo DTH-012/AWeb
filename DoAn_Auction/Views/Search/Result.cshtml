@@ -1,8 +1,9 @@
-﻿@using DoAn_Auction.Models
+﻿@using DoAn_Auction.Helpers;
+@using DoAn_Auction.Models
 @model List<Auction>
 @section title
 {
-    Search
+    Tìm kiếm
 }
 
 @section css
@@ -15,6 +16,13 @@
 <link href="~/assets/css/jquery.countdown.css" rel="stylesheet" />
 
     <style type="text/css">
+        .not-active {
+           pointer-events:painted;
+           cursor: pointer;
+        }   
+        .added{
+            color: #ef5350;
+        }
         .img-main {
             height: 250px;
         }
@@ -58,9 +66,64 @@
             //        alert('fail');
             //    });
         });
+        $('[data-countdown]').each(function () {
+            var $this = $(this), finalDate = $(this).data('countdown');
+            $this.countdown(finalDate, function (event) {
+                $this.html(event.strftime(''
+              + '<span class="countdown-section"><span class="countdown-amount">%D</span><span class="countdown-period">Ngày</span></span>'
+              + '<span class="countdown-section"><span class="countdown-amount">%H</span><span class="countdown-period">Giờ</span></span>'
+              + '<span class="countdown-section"><span class="countdown-amount">%M</span><span class="countdown-period">Phút</span></span>'
+              + '<span class="countdown-section"><span class="countdown-amount">%S</span><span class="countdown-period">Giây</span></span>'
+              ));
+            });
+        });
+    </script>
+@foreach (var p in Model) { 
+    <script type="text/javascript">
+        $('@String.Copy("#addFavo"+p.ProID.ToString())').on('click', function () {
+            var proid = $(this).data('proid');
+            var idtag = $(this).data('idtag');
+            var params = { "ProID": proid };
+            var url = '/Account/AddFavo/';
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: params,
+                dataType: 'json',
+                async: false,
+                @*success: function (data) {
+                console.log(data);
+                //location.reload();
+                $('@String.Copy("#addFavo"+p.ProID.ToString())').addClass('added');
+            }*@
+            })
+            .done(function (data) {
+                //location.reload();
+                $(idtag).attr("data-original-title", "Đã yêu thích");
+                $(idtag).css("color", "#ef5350");
+                $(idtag).attr("onclick", "return false;");
+                $(idtag).attr("data-idtag", "disabled");
+                $(idtag).attr("id", "disabled");
+
+            })
+            .fail(function (data) {
+                console.log(data);
+                alert('Đã thêm vao danh sách');
+            });
+        });
     </script>
 }
-
+}
+<!-- Breadcrumbs -->
+<div class="breadcrumb-container">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("Index", "Home")">Home</a></li>
+            <li class="active">Tìm kiếm</li>
+        </ol>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
 
 <!-- Main Content -->
 <div class="container m-t-2">
@@ -113,11 +176,11 @@
                             <a href="@Url.Action("Detail", "Product", new { id = p.ProID })" data-toggle="tooltip" title="Chi tiết">
                                 <img class="img-main" alt="Product" src="~/Images/sp/@p.ProID/main.jpg">
                             </a>
-                            @if (Convert.ToDateTime(p.TimeStart).AddHours(2) > DateTime.UtcNow)
+                            @if (Convert.ToDateTime(p.TimeStart).AddHours(6) > DateTime.Now)
                             {
                                 <div class="tags tags-left">
-                                    <span class="label-tags"><span class="label label-success arrowed-right">New</span></span>
-                                </div>
+                                <span class="label-tags"><span class="label label-success arrowed-right">Mới</span></span>
+                            </div>
                             }
                             @if (p.PriceBuy > 0 && p.PriceHighest < p.PriceBuy)
                             {
@@ -133,12 +196,36 @@
                                         <span class="label-tags"><span class="label label-danger arrowed-right">Sale</span></span>
                                     </div>*@
                                 <div class="option">
-                                    <a href="#" data-toggle="tooltip" title="Đấu giá"><i class="fa fa-gavel"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Thêm vào so sánh"><i class="fa fa-align-left"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Thêm vào yêu thích" class="wishlist"><i class="fa fa-heart"></i></a>
+                                    @if (CurrentContext.IsLogged() == false)
+                                    {
+                                        <a href="#" data-toggle="tooltip" title="Bạn chưa đăng nhập"><i class="fa fa-gavel"></i></a>
+                                        <a href="#" data-toggle="tooltip" title="Bạn chưa đăng nhập" class="wishlist"><i class="fa fa-heart"></i></a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@Url.Action("Detail", "Product", new { id = p.ProID })" data-toggle="tooltip" title="Đấu giá"><i class="fa fa-gavel"></i></a>
+                                        var UserID = CurrentContext.GetCurUser().f_ID;
+                                        var ctx = new QLDauGiaEntities();
+                                        if (!ctx.Favorites.Where(f => f.UserID == UserID).Any(f => f.ProID == p.ProID))
+                                        {
+                                            <a id="@String.Copy("addFavo"+p.ProID.ToString())" href="javascript:;" data-toggle="tooltip"
+                                               title="Thêm vào yêu thích" data-proid="@p.ProID" data-idtag="@String.Copy("#addFavo"+p.ProID.ToString())" class="wishlist "><i class="fa fa-heart"></i></a>
+                                        }
+                                        else
+                                        {
+                                            <a href="#" data-toggle="tooltip" title="Đã yêu thích" class="wishlist" onclick="return false;"><i class=" fa fa-heart added"></i></a>
+                                        }
+                                    }
                                 </div>
                             </div>
-                            <h6><a id="ProName" href="detail.html">@p.ProName</a></h6>
+                        <div class="countdown">
+                            <span id="future_date_2_14" class="id_countdown is-countdown">
+                                <span id="clock2" data-countdown="@p.TimeEnd.ToString("MM/dd/yyyy hh:mm:ss tt")" class=" countdown-row countdown-show4">
+
+                                </span>
+                            </span>
+                        </div>
+                            <h4><a id="ProName" href="@Url.Action("Detail", "Product", new { id = p.ProID })">@p.ProName</a></h4>
                             <div class="price">
                                 <div>
                                     <span class="label-tags"><span class="label label-info arrowed-right">Giá hiện tại: </span></span>
@@ -238,7 +325,7 @@
     </div>
 
     <!-- Brand & Clients -->
-    <div class="row">
+    @*<div class="row">
         <div class="col-xs-12 m-t-1">
             <div class="title text-center"><span>Brand & Clients</span></div>
             <div class="brand-slider owl-controls-top-offset">
@@ -274,7 +361,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div>*@
     <!-- End Brand & Clients -->
 
 </div>

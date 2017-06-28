@@ -212,7 +212,9 @@
     <Content Include="assets\css\bootstrap-select.css" />
     <Content Include="assets\css\font-awesome.css" />
     <Content Include="assets\css\jquery.bootstrap-touchspin.css" />
+    <Content Include="assets\css\jquery.countdown.css" />
     <Content Include="assets\css\menucate.css" />
+    <Content Include="assets\css\modal-loading.css" />
     <Content Include="assets\css\New\font-awesome.min.css" />
     <Content Include="assets\css\nouislider.css" />
     <Content Include="assets\css\owl.carousel.css" />
@@ -407,6 +409,12 @@
     <Content Include="assets\js\bonus\jquery.validate.js" />
     <Content Include="assets\js\bonus\jquery.validate.unobtrusive.js" />
     <Content Include="assets\js\bootstrap-select.js" />
+    <Content Include="assets\js\bootstrap-table\bootstrap-table-locale-all.js" />
+    <Content Include="assets\js\bootstrap-table\bootstrap-table-locale-all.min.js" />
+    <Content Include="assets\js\bootstrap-table\bootstrap-table.css" />
+    <Content Include="assets\js\bootstrap-table\bootstrap-table.js" />
+    <Content Include="assets\js\bootstrap-table\bootstrap-table.min.css" />
+    <Content Include="assets\js\bootstrap-table\bootstrap-table.min.js" />
     <Content Include="assets\js\common.js" />
     <Content Include="assets\js\elevate\jquery-1.8.3.min.js" />
     <Content Include="assets\js\elevate\jquery.elevateZoom-3.0.8.min.js" />
@@ -414,6 +422,8 @@
     <Content Include="assets\js\ga.js" />
     <Content Include="assets\js\init_embed.js" />
     <Content Include="assets\js\jquery.bootstrap-touchspin.js" />
+    <Content Include="assets\js\jquery.countdown.js" />
+    <Content Include="assets\js\jquery.countdown.min.js" />
     <Content Include="assets\js\jquery.ez-plus.js" />
     <Content Include="assets\js\jquery.js" />
     <Content Include="assets\js\jquery.raty-fa.js" />
@@ -427,6 +437,7 @@
     <Content Include="assets\js\owl.carousel.js" />
     <Content Include="assets\js\owl.carousel.min.js" />
     <Content Include="assets\js\search_impl.js" />
+    <Content Include="assets\js\table-paging.js" />
     <Content Include="assets\js\util.js" />
     <Content Include="assets\js\wizard.js" />
     <Content Include="assets\kartik-bootstrap-fileinput\css\fileinput-rtl.css" />
@@ -489,6 +500,10 @@
     <Content Include="assets\kartik-bootstrap-fileinput\themes\fa\theme.min.js" />
     <Content Include="assets\kartik-bootstrap-fileinput\themes\gly\theme.js" />
     <Content Include="assets\kartik-bootstrap-fileinput\themes\gly\theme.min.js" />
+    <Content Include="assets\mailMsg\src.html" />
+    <Content Include="assets\mailMsg\tplKick.html" />
+    <Content Include="assets\mailMsg\tplAuction.html" />
+    <Content Include="assets\mailMsg\tplResetPWD.html" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\Site.css" />
@@ -746,9 +761,11 @@
     <Compile Include="Controllers\AuctionController.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
     <Compile Include="Controllers\MCategoryController.cs" />
+    <Compile Include="Controllers\MRequestSellingController.cs" />
+    <Compile Include="Controllers\MUserController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\ProductController.cs" />
     <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\WishController.cs" />
     <Compile Include="Filters\CheckLoginAttribute.cs" />
     <Compile Include="Helpers\CurrentContext.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -756,8 +773,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\MailHelper.cs" />
     <Compile Include="Helpers\StringUtils.cs" />
-    <Compile Include="Helpers\Wishlist.cs" />
     <Compile Include="Models\Auction.cs">
       <DependentUpon>QLLDauGia.tt</DependentUpon>
     </Compile>
@@ -769,8 +786,20 @@
     <Compile Include="Models\Category.cs">
       <DependentUpon>QLLDauGia.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\DesBonu.cs">
+      <DependentUpon>QLLDauGia.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Favorite.cs">
+      <DependentUpon>QLLDauGia.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\LoginVM.cs" />
+    <Compile Include="Models\RegisterSelling.cs">
+      <DependentUpon>QLLDauGia.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\RegisterVM.cs" />
+    <Compile Include="Models\Review.cs">
+      <DependentUpon>QLLDauGia.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\User.cs">
       <DependentUpon>QLLDauGia.tt</DependentUpon>
     </Compile>
@@ -818,7 +847,29 @@
     <Content Include="Views\Product\Detail.cshtml" />
     <Content Include="Views\Search\FormPartial.cshtml" />
     <Content Include="Views\Search\Result.cshtml" />
-    <Content Include="Views\Home\TOPBIDPartial.cshtml" />
+    <Content Include="Views\Account\EditProfile.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Account\AuctionHistory.cshtml" />
+    <Content Include="Views\Account\Bidding.cshtml" />
+    <Content Include="Views\Account\YourProduct.cshtml" />
+    <Content Include="Views\Account\YourCustomer.cshtml" />
+    <Content Include="Views\Home\Top5HotPartial.cshtml" />
+    <Content Include="Views\Home\Top5HighestPartial.cshtml" />
+    <Content Include="Views\Home\Top5TimeEndPartial.cshtml" />
+    <Content Include="Views\Home\Top5NewPartial.cshtml" />
+    <Content Include="Views\Account\BidWin.cshtml" />
+    <Content Include="Views\MCategory\Index.cshtml" />
+    <Content Include="Views\MCategory\Delete.cshtml" />
+    <Content Include="Views\MCategory\Edit.cshtml" />
+    <Content Include="Views\MRequestSelling\Index.cshtml" />
+    <Content Include="Views\MUser\Index.cshtml" />
+    <Content Include="Views\MUser\Delete.cshtml" />
+    <Content Include="Views\Account\ReviewDetail.cshtml" />
+    <Content Include="Views\Account\Favorite.cshtml" />
+    <Content Include="Views\Notification\Index.cshtml" />
+    <Content Include="Views\Product\ByCat.cshtml" />
+    <Content Include="Views\Account\MenuPartial.cshtml" />
+    <Content Include="Views\Account\Recover.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -828,7 +879,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Wish\" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

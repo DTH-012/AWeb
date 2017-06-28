@@ -1,0 +1,113 @@
+﻿@section title
+{
+    Quên mật khẩu
+}
+@section css
+{
+    <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
+
+    <style type="text/css">
+        .help-clock {
+            color: #a94442;
+        }
+    </style>
+}
+@section js
+{
+    <script src="~/assets/jquery-validation-1.16.0/jquery.validate.min.js"></script>
+    <script src="~/assets/js/bootstrap-select.js"></script>
+    <script src="~/assets/js/mimity.js"></script>
+
+    <script type="text/javascript">
+        jQuery.validator.addMethod("IsEmailExit", function (value, element) {
+            var url = '/Account/IsEmailExit/?input=' + value;
+            var ret = false;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                async: false,
+                success: function (data) {
+                    ret = data;
+                    console.log(data);
+                }
+            });
+            if (ret == "True") {
+                return true;
+            }
+            if (ret == "False") {
+                return false;
+            }
+        }, "Email không tồn tại");
+        $('#frmRevover').validate({
+            highlight: function (element) {
+                //var id_attr = "#" + $(element).attr("id") + "1";
+                $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                //$(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            },
+
+            unhighlight: function (element) {
+                //var id_attr = "#" + $(element).attr("id") + "1";
+                $(element).closest('.form-group').removeClass('has-error');
+                //$(id_attr).removeClass('glyphicon-remove').addClass('glyphicon-ok');
+            },
+            errorElement: 'span',
+            errorClass: 'help-clock',
+            rules: {
+                Email: {
+                    required: true,
+                    email: true,
+                    IsEmailExit: true,
+                },
+            },
+
+            messages: {
+                Email: {
+                    required: "Vui lòng nhập email",
+                    email: "Email không hợp lệ",
+                    IsEmailExit: "Email không tồn tại"
+                }
+            }
+        });
+    </script>
+}
+
+<!-- Breadcrumbs -->
+<div class="breadcrumb-container">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="active">Quên mật khẩu</li>
+        </ol>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+
+<div class="container m-t-3">
+    <div class="row">
+        @*@if (@ViewBag.Success != null)
+        {
+            <div class="form-group col-md-12 ">
+                <div class="alert alert-success">
+                    @ViewBag.Success
+                </div>
+            </div>
+        }*@
+        <!-- Register Form -->
+        <div class="col-sm-6 login-register-form m-b-3">
+            <div class="title"><span>Quên mật khẩu</span></div>
+            <div class="row">
+                <form method="post" action="" id="frmRevover">
+                    <div class="form-group col-sm-12">
+                        <label class="control-label" for="txtEmail">Nhập Email để reset mật khẩu</label>
+                        @*<label class="control-label"  for="txtEmail">Email</label>*@
+                        <input type="email" class="form-control" id="txtEmail" placeholder="Email" name="Email">
+                    </div>
+                    <div class="col-xs-12">
+                        <button type="submit" class="btn btn-theme"><i class="fa fa-share"></i> Reset mật khẩu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+

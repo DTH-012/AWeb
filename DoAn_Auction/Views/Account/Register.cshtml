@@ -12,7 +12,7 @@
 
     <style type="text/css">
         .help-clock {
-            color: #BD3315;
+            color: #a94442;
         }
     </style>
 }
@@ -69,7 +69,11 @@
             }
         }, "Email đã tồn tại");
         $('#frmRegister').validate({
-            
+            //highlight: function (element) {
+            //    var id_attr = "#" + $(element).attr("id") + "1";
+            //    $(element).closest('.form-group').addClass('has-error');
+            //    $(id_attr).removeClass('glyphicon-ok').addClass('glyphicon-remove');
+            //},
             highlight: function (element) {
                 //var id_attr = "#" + $(element).attr("id") + "1";
                 $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -86,6 +90,7 @@
             rules: {
                 Username: {
                     required: true,
+                    minlength:5,
                     //remote: {
                     //    url: "/Account/IsUsernameUnique/",
                     //    type: "post",
@@ -104,7 +109,8 @@
                     equalTo: '#txtPWD'
                 },
                 Name: {
-                    required: true
+                    required: true,
+                    minlength: 6
                 },
                 Email: {
                     required: true,
@@ -128,6 +134,7 @@
             messages: {
                 Username: {
                     required: "Vui lòng nhập username",
+                    minlength: "Username tối thiểu 5 kí tự",
                     UniqueUser: "Username đã tồn tại"
                 },
                 PWD: {
@@ -139,7 +146,8 @@
                     equalTo: "Sai mật khẩu nhập lại"
                 },
                 Name: {
-                    required: "Vui lòng nhập họ tên"
+                    required: "Vui lòng nhập họ tên",
+                    minlength: "Tên phải tối thiểu 6 kí tự"
                 },
                 Email: {
                     required: "Vui lòng nhập email",
@@ -187,8 +195,8 @@
 <div class="breadcrumb-container">
     <div class="container">
         <ol class="breadcrumb">
-            <li><a href="index.html">Home</a></li>
-            <li class="active">Register</li>
+            <li><a href="@Url.Action("Index", "Home")">Trang chủ</a></li>
+            <li class="active">Đăng ký</li>
         </ol>
     </div>
 </div>
@@ -219,39 +227,39 @@
         }
         <!-- Register Form -->
         <div class="col-sm-6 login-register-form m-b-3">
-            <div class="title"><span>Create An Account</span></div>
+            <div class="title"><span>Tạo tài khoản mới</span></div>
             <div class="row">
                 <form method="post" action="@Url.Action("Register", "Account")" id="frmRegister">
                     <div class="form-group col-sm-12">
-                        <label for="txtUsername">Tên đăng nhập</label>
+                        <label class="control-label" for="txtUsername">Tên đăng nhập</label>
                         <input type="text" class="form-control" id="txtUsername" placeholder="Tên đăng nhập" name="Username">
                     </div>
                     <div class="form-group col-sm-12">
-                        <label for="txtEmail">Email</label>
+                        <label class="control-label" for="txtEmail">Email</label>
                         <input type="email" class="form-control" id="txtEmail" placeholder="Email" name="Email">
                     </div>
                     <div class="form-group col-sm-12">
-                        <label for="txtPWD">Password</label>
+                        <label class="control-label" for="txtPWD">Password</label>
                         <input type="password" class="form-control" id="txtPWD" placeholder="Password" name="RawPWD">
                     </div>
                     <div class="form-group col-sm-12">
-                        <label for="txtCPWD">Nhập lại Password</label>
+                        <label class="control-label" for="txtCPWD">Nhập lại Password</label>
                         <input type="password" class="form-control" id="txtCPWD" placeholder="Nhập lại Password" name="CPWD">
                     </div>
                     <div class="form-group col-sm-12">
-                        <label for="txtName">Họ tên</label>
+                        <label class="control-label" for="txtName">Họ tên</label>
                         <input type="text" class="form-control" id="txtName" placeholder="Name" name="Name">
                     </div>
                     <div class="form-group col-sm-12">
-                        <label for="txtDOB">Ngày sinh</label>
+                        <label class="control-label" for="txtDOB">Ngày sinh</label>
                         <input type="text" class="form-control datepicker" id="txtDOB" placeholder="d/m/yyyy" name="DOB" readonly>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label for="txtAddress">Địa chỉ</label>
+                        <label class="control-label" for="txtAddress">Địa chỉ</label>
                         <textarea class="form-control" rows="3" id="txtAddress" name="Address" placeholder="Địa chỉ"></textarea>
                     </div>
                     <div class="form-group col-sm-12">
-                        <label for="txtPhone">Số điện thoại</label>
+                        <label class="control-label" for="txtPhone">Số điện thoại</label>
                         <input type="text" class="form-control" id="txtPhone" placeholder="Ví dụ: 086400522 hoặc 0123456789" name="Phone">
                     </div>
                     <div class="form-group col-sm-12">
@@ -264,7 +272,7 @@
                         @*</div>*@
                     </div>
                     <div class="form-group col-sm-12">
-                        <label for="txtName">Captcha</label>
+                        <label class="control-label" for="txtName">Captcha</label>
                         <input type="text" class="form-control" id="txtCaptcha" placeholder="Captcha" name="CaptchaCode">
                     </div>
                     @*<div class="col-xs-12">
@@ -283,23 +291,34 @@
         <!-- End Register Form -->
         <!-- Login Form -->
         <div class="col-sm-6">
-            <div class="title"><span>Already Registered ?</span></div>
+            <div class="title"><span>Đăng nhập</span></div>
             <form id="frmLogin" action="@Url.Action("Login", "Account")" method="post">
                 <div class="form-group">
-                    <label for="txtUsernameLog">Email address</label>
+                    <label class="control-label" for="txtUsernameLog">Tên đăng nhập</label>
                     <input type="text" class="form-control" id="tx
-                           hình như name khactUsernameLog" placeholder="Username" name="Username">
+                           hình như name khactUsernameLog" placeholder="Tên đăng nhập" name="Username">
                 </div>
                 <div class="form-group">
-                    <label for="txtPasswordLog">Password</label>
-                    <input type="password" class="form-control" id="txtPasswordLog" placeholder="Password" name="RawPWD">
+                    <label class="control-label" for="txtPasswordLog">Mật khẩu</label>
+                    <input type="password" class="form-control" id="txtPasswordLog" placeholder="Mật khẩu" name="RawPWD">
                 </div>
                 <div class="checkbox">
                     <label>
-                        <input type="checkbox" name="Remember"><span> Ghi nhớ</span>
+                        <input type="checkbox" name="Remember" value="true"><span> Ghi nhớ</span>
+                        <input type="checkbox" name="Remember" hidden value="false">
                     </label>
                 </div>
-                <button type="submit" class="btn btn-theme"><i class="fa fa-long-arrow-right"></i> Login</button>
+                        @if (@ViewBag.ErrorMsg != null)
+                        {
+                            <div>
+                                <a href="@Url.Action("Recover","Account")">
+                                    <span id="" class="help-clock">Quên mật khẩu ?</span>
+                                </a>
+                            </div>
+                        }
+                <button type="submit" class="btn btn-theme"><i class="fa fa-long-arrow-right"></i> Đăng nhập</button>
+                
+                
             </form>
         </div>
         <!-- End Login Form -->

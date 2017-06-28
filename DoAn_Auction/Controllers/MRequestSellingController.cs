@@ -17,10 +17,10 @@ namespace DoAn_Auction.Controllers
             ViewBag.Current = "Request";
             using (var ctx = new QLDauGiaEntities())
             {
-                var cat = ctx.RegisterSellings.Where(r=>r.Status==1)
+                var rq = ctx.RegisterSellings.Where(r=>r.Status==1)
                     .OrderBy(r=>r.DateSend)
                     .ToList();
-                return View(cat);
+                return View(rq);
             }
         }
 

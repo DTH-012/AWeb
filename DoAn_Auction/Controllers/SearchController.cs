@@ -28,7 +28,6 @@ namespace DoAn_Auction.Controllers
         //}
 
         //GET: Search/Result
-	//Function Seach 
         public ActionResult Result(string q, int? cat,int? sort, int page = 1)
         {
             var list=ctx.Auctions.ToList();
@@ -36,12 +35,12 @@ namespace DoAn_Auction.Controllers
             if (cat.HasValue == false || cat==0)
             {
                 list= ctx.Auctions
-                   .Where(c => c.ProName.Contains(q)).ToList();
+                   .Where(c => c.ProName.Contains(q) && c.Status==true).ToList();
             }
             else
             {
                 list = ctx.Auctions
-                    .Where(c => c.ProName.Contains(q) && c.CatID==cat).ToList();
+                    .Where(c => c.ProName.Contains(q) && c.CatID == cat && c.Status == true).ToList();
             }
 
             int n = list.Count();
@@ -90,12 +89,12 @@ namespace DoAn_Auction.Controllers
             if (cat.HasValue == false || cat == 0)
             {
                 list = ctx.Auctions
-                   .Where(c => c.ProName.Contains(q)).ToList();
+                   .Where(c => c.ProName.Contains(q) && c.Status == true).ToList();
             }
             else
             {
                 list = ctx.Auctions
-                    .Where(c => c.ProName.Contains(q) && c.CatID == cat).ToList();
+                    .Where(c => c.ProName.Contains(q) && c.CatID == cat && c.Status == true).ToList();
             }
 
             int n = list.Count();

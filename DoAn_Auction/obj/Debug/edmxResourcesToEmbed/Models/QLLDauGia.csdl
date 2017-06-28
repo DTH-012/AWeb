@@ -1,29 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="QLDauGiaModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
-  <EntityType Name="User">
-    <Key>
-      <PropertyRef Name="f_ID" />
-    </Key>
-    <Property Name="f_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="f_Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="f_Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="f_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="f_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="f_DOB" Type="DateTime" Precision="3" />
-    <Property Name="f_Level" Type="Int32" />
-    <Property Name="f_Rate" Type="Int32" />
-    <Property Name="f_Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
-    <Property Name="f_Phone" Type="String" MaxLength="13" FixedLength="true" Unicode="true" />
-  </EntityType>
   <EntityContainer Name="QLDauGiaEntities" annotation:LazyLoadingEnabled="true">
-    <EntitySet Name="Users" EntityType="Self.User" />
     <EntitySet Name="Categories" EntityType="QLDauGiaModel.Category" />
     <AssociationSet Name="CategoryCategory" Association="QLDauGiaModel.CategoryCategory">
       <End Role="Category" EntitySet="Categories" />
       <End Role="Category1" EntitySet="Categories" />
     </AssociationSet>
-    <EntitySet Name="Auctions" EntityType="QLDauGiaModel.Auction" />
+    <EntitySet Name="Reviews" EntityType="QLDauGiaModel.Review" />
+    <EntitySet Name="RegisterSellings" EntityType="QLDauGiaModel.RegisterSelling" />
+    <EntitySet Name="Favorites" EntityType="QLDauGiaModel.Favorite" />
+    <EntitySet Name="DesBonus" EntityType="QLDauGiaModel.DesBonu" />
+    <EntitySet Name="Users" EntityType="QLDauGiaModel.User" />
     <EntitySet Name="AuctionHistories" EntityType="QLDauGiaModel.AuctionHistory" />
+    <EntitySet Name="Auctions" EntityType="QLDauGiaModel.Auction" />
   </EntityContainer>
   <EntityType Name="Category">
     <Key>
@@ -47,36 +36,93 @@
       </Dependent>
     </ReferentialConstraint>
   </Association>
-  <EntityType Name="Auction">
+  <EntityType Name="Review">
     <Key>
-      <PropertyRef Name="ProID" />
+      <PropertyRef Name="ID" />
     </Key>
-    <Property Name="ProID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="ProName" Type="String" MaxLength="40" FixedLength="false" Unicode="true" />
-    <Property Name="FullDes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="PriceStarting" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="PriceBuy" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="CatID" Type="Int32" />
-    <Property Name="PriceHighest" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="Customer" Type="Int32" />
-    <Property Name="TimeStart" Type="DateTime" Precision="3" />
-    <Property Name="TimeEnd" Type="DateTime" Precision="3" />
-    <Property Name="Adjourning" Type="Boolean" />
-    <Property Name="Status" Type="Boolean" />
-    <Property Name="Required" Type="Int32" />
-    <Property Name="Step" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="Seller" Type="Int32" />
-    <Property Name="Quantity" Type="Int32" />
-    <Property Name="PriceCurrent" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProID" Type="Int32" Nullable="false" />
+    <Property Name="Reviewer" Type="Int32" Nullable="false" />
+    <Property Name="Type" Type="Boolean" Nullable="false" />
+    <Property Name="Comment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Receiver" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RegisterSelling">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" />
+    <Property Name="DateStart" Type="DateTime" Precision="3" />
+    <Property Name="DateEnd" Type="DateTime" Precision="3" />
+    <Property Name="Status" Type="Int32" />
+    <Property Name="DateSend" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="Favorite">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="ProID" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="DesBonu">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProID" Type="Int32" Nullable="false" />
+    <Property Name="DesBonus" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="f_ID" />
+    </Key>
+    <Property Name="f_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="f_Username" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="f_Password" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="f_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="f_Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="f_DOB" Type="DateTime" Precision="3" />
+    <Property Name="f_Level" Type="Int32" />
+    <Property Name="f_Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="f_Phone" Type="String" MaxLength="13" FixedLength="false" Unicode="true" />
+    <Property Name="f_Like" Type="Int32" />
+    <Property Name="f_Dislike" Type="Int32" />
   </EntityType>
   <EntityType Name="AuctionHistory">
     <Key>
       <PropertyRef Name="ID" />
     </Key>
     <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="ProID" Type="Int32" />
-    <Property Name="UserID" Type="Int32" />
-    <Property Name="Price" Type="Decimal" Precision="19" Scale="4" />
-    <Property Name="Time" Type="DateTime" Precision="3" />
+    <Property Name="ProID" Type="Int32" Nullable="false" />
+    <Property Name="UserID" Type="Int32" Nullable="false" />
+    <Property Name="Price" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Status" Type="Boolean" Nullable="false" />
+    <Property Name="PriceHighest" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+  </EntityType>
+  <EntityType Name="Auction">
+    <Key>
+      <PropertyRef Name="ProID" />
+    </Key>
+    <Property Name="ProID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProName" Type="String" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
+    <Property Name="FullDes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PriceStarting" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="PriceBuy" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="CatID" Type="Int32" Nullable="false" />
+    <Property Name="PriceHighest" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="Customer" Type="Int32" Nullable="false" />
+    <Property Name="TimeStart" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TimeEnd" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Adjourning" Type="Boolean" Nullable="false" />
+    <Property Name="Status" Type="Boolean" Nullable="false" />
+    <Property Name="Required" Type="Int32" Nullable="false" />
+    <Property Name="Step" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
+    <Property Name="Seller" Type="Int32" Nullable="false" />
+    <Property Name="Quantity" Type="Int32" Nullable="false" />
+    <Property Name="PriceCurrent" Type="Decimal" Nullable="false" Precision="19" Scale="4" />
   </EntityType>
 </Schema>

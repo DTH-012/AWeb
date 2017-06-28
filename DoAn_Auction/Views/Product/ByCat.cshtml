@@ -256,7 +256,7 @@
 
                             <div class="countdown">
                                 <span id="future_date_2_14" class="id_countdown is-countdown">
-                                    <span id="clock2" data-countdown="@Convert.ToDateTime(p.TimeEnd).AddDays(15).ToString("MM/dd/yyyy hh:mm:ss tt")" class=" countdown-row countdown-show4">
+                                    <span id="clock2" data-countdown="@p.TimeEnd.ToString("MM/dd/yyyy hh:mm:ss tt")" class=" countdown-row countdown-show4">
                                         @*<span class="countdown-section">
                                                 <span id="@String.Copy("demoday"+p.ProID.ToString())" class="countdown-amount"></span>
                                                 <span class="countdown-period">Days</span>

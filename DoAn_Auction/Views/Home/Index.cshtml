@@ -1,6 +1,8 @@
-﻿@section title
+﻿@using DoAn_Auction.Models;
+@model List<Auction>
+@section title
 {
-    Home
+    Trang chủ
 }
 
 @section css
@@ -8,7 +10,26 @@
     <link href="~/assets/css/bootstrap-select.css" rel="stylesheet" />
     <link href="~/assets/css/owl.carousel.css" rel="stylesheet" />
     <link href="~/assets/css/owl.theme.default.css" rel="stylesheet" />
-<link href="~/assets/css/menucate.css" rel="stylesheet" />
+    <link href="~/assets/css/menucate.css" rel="stylesheet" />
+    <link href="~/assets/css/jquery.countdown.css" rel="stylesheet" />
+<style type="text/css">
+        .not-active {
+           pointer-events:painted;
+           cursor: pointer;
+        }   
+        .added{
+            color: #ef5350;
+        }
+    .product-slider .box-product-outer img{
+        width:440px;
+        height:370px;
+    }
+    .col-sm-4 .box-product img{
+        width:440px;
+        height:280px;
+    }
+</style>
+
 }
 
 @section js
@@ -16,7 +37,8 @@
     <script src="~/assets/js/bootstrap-select.js"></script>
     <script src="~/assets/js/owl.carousel.js"></script>
     <script src="~/assets/js/mimity.js"></script>
-	<script>
+<script src="~/assets/js/jquery.countdown.js"></script>
+<script>
     $('[data-countdown]').each(function () {
         var $this = $(this), finalDate = $(this).data('countdown');
         $this.countdown(finalDate, function (event) {
@@ -29,6 +51,42 @@
         });
     });
 </script>
+@foreach (var p in Model)
+{
+    <script type="text/javascript">
+        $('@String.Copy("#addFavo"+p.ProID.ToString())').on('click', function () {
+            var proid = $(this).data('proid');
+            var idtag = $(this).data('idtag');
+            var params = { "ProID": proid };
+            var url = '/Account/AddFavo/';
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: params,
+                dataType: 'json',
+                async: false,
+                @*success: function (data) {
+                console.log(data);
+                //location.reload();
+                $('@String.Copy("#addFavo"+p.ProID.ToString())').addClass('added');
+            }*@
+            })
+            .done(function (data) {
+                //location.reload();
+                $(idtag).attr("data-original-title", "Đã yêu thích");
+                $(idtag).css("color", "#ef5350");
+                $(idtag).attr("onclick", "return false;");
+                $(idtag).attr("data-idtag", "disabled");
+                $(idtag).attr("id", "disabled");
+
+            })
+            .fail(function (data) {
+                console.log(data);
+                alert('Đã thêm vao danh sách');
+            });
+        });
+    </script>
+}
 }
 
 
@@ -39,13 +97,13 @@
         <div class="row">
             <div class="home-slider">
                 <div class="item">
-                    <a href="products.html"><img src="/images/demo/slide-1-full.jpg" alt="Slider"></a>
+                    <a href="@Url.Action("Index","Product")"><img src="/images/demo/slide-1-full.jpg" alt="Slider"></a>
                 </div>
                 <div class="item">
-                    <a href="products.html"><img src="/images/demo/slide-2-full.jpg" alt="Slider"></a>
+                    <a href="@Url.Action("Index","Product")"><img src="/images/demo/slide-2-full.jpg" alt="Slider"></a>
                 </div>
                 <div class="item">
-                    <a href="products.html"><img src="/images/demo/slide-3-full.jpg" alt="Slider"></a>
+                    <a href="@Url.Action("Index","Product")"><img src="/images/demo/slide-3-full.jpg" alt="Slider"></a>
                 </div>
             </div>
         </div>
@@ -59,8 +117,8 @@
             <!-- New Arrivals & Best Selling -->
             <div class="col-md-3 m-b-1">
                 <div class="navbar-vertical">
-                    <div class="header title"><span>Categories <i class="fa fa-navicon pull-right"></i></span></div>
-                    @Html.Action("List","Category")
+                    <div class="header title"><span>Danh mục <i class="fa fa-navicon pull-right"></i></span></div>
+                    @Html.Action("List", "Category")
                 </div><!-- end navbar-vertical -->
 
             </div>
@@ -71,342 +129,52 @@
             <div class="col-md-9">
 
                 <!-- Featured -->
-                <div class="title"><span>Featured Products</span></div>
-                    @Html.Action("LoadTOPBID", "Home")
-                @*<div class="col-sm-4 col-lg-3 box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="/images/demo/polo1.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-default arrowed">Featured</span></span>
-                            </div>
-                            <div class="tags tags-left">
-                                <span class="label-tags"><span class="label label-danger arrowed-right">Sale</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">IncultGeo Print Polo T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-default">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-lg-3 hidden-xs box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="/images/demo/polo2.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-default arrowed">Featured</span></span>
-                            </div>
-                            <div class="tags tags-left">
-                                <span class="label-tags"><span class="label label-success arrowed-right">Sale</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">Tommy HilfigerNavy Blue Printed Polo T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-primary">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-lg-3 hidden-xs box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="/images/demo/polo3.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-default arrowed">Featured</span></span>
-                            </div>
-                            <div class="tags tags-left">
-                                <span class="label-tags"><span class="label label-primary arrowed-right">Sale</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">WranglerNavy Blue Solid Polo T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-success">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-sm-4 col-lg-3 visible-lg box-product-outer">
-                    <div class="box-product">
-                        <div class="img-wrapper">
-                            <a href="detail.html">
-                                <img alt="Product" src="/images/demo/polo4.jpg">
-                            </a>
-                            <div class="tags">
-                                <span class="label-tags"><span class="label label-default arrowed">Featured</span></span>
-                            </div>
-                            <div class="tags tags-left">
-                                <span class="label-tags"><span class="label label-danger arrowed-right">Sale</span></span>
-                            </div>
-                            <div class="option">
-                                <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                            </div>
-                        </div>
-                        <h6><a href="detail.html">NikeAs Matchup -Pq Grey Polo T-Shirt</a></h6>
-                        <div class="price">
-                            <div>$13.50 <span class="label-tags"><span class="label label-danger">-10%</span></span></div>
-                            <span class="price-old">$15.00</span>
-                        </div>
-                        <div class="rating">
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star"></i>
-                            <i class="fa fa-star-half-o"></i>
-                            <a href="#">(5 reviews)</a>
-                        </div>
-                    </div>
-                </div>*@
+                <div class="title"><span>Sản phẩm mới</span></div>
+                @Html.Action("Top5New", "Home")
+                
+                
+            </div>
+        </div>
                 <!-- End Featured -->
 
-                <div class="clearfix visible-sm visible-xs"></div>
+        <div class="row">
+            <div class="clearfix visible-sm visible-xs"></div>
 
-                <!-- Collection -->
-                <div class="title m-t-2"><span>V-Neck Collection</span></div>
-                <div class="product-slider owl-controls-top-offset">
-                    <div class="box-product-outer">
-                        <div class="box-product">
-                            <div class="img-wrapper">
-                                <a href="detail.html">
-                                    <img alt="Product" src="/images/demo/vneck1.jpg">
-                                </a>
-                                <div class="tags">
-                                    <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
-                                    <span class="label-tags"><span class="label label-default arrowed">Collection</span></span>
-                                </div>
-                                <div class="option">
-                                    <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                            <h6><a href="detail.html">PhosphorusGrey Melange Printed V Neck T-Shirt</a></h6>
-                            <div class="price">
-                                <div>$13.50 <span class="label-tags"><span class="label label-danger arrowed">-10%</span></span></div>
-                                <span class="price-old">$15.00</span>
-                            </div>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <a href="#">(5 reviews)</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-product-outer">
-                        <div class="box-product">
-                            <div class="img-wrapper">
-                                <a href="detail.html">
-                                    <img alt="Product" src="/images/demo/vneck2.jpg">
-                                </a>
-                                <div class="tags">
-                                    <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
-                                    <span class="label-tags"><span class="label label-primary arrowed">Collection</span></span>
-                                </div>
-                                <div class="option">
-                                    <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                            <h6><a href="detail.html">United Colors of BenettonNavy Blue Solid V Neck T Shirt</a></h6>
-                            <div class="price">
-                                <div>$13.50 <span class="label-tags"><span class="label label-success arrowed">-10%</span></span></div>
-                                <span class="price-old">$15.00</span>
-                            </div>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <a href="#">(5 reviews)</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-product-outer">
-                        <div class="box-product">
-                            <div class="img-wrapper">
-                                <a href="detail.html">
-                                    <img alt="Product" src="/images/demo/vneck3.jpg">
-                                </a>
-                                <div class="tags">
-                                    <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
-                                    <span class="label-tags"><span class="label label-success arrowed">Collection</span></span>
-                                </div>
-                                <div class="option">
-                                    <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                            <h6><a href="detail.html">WranglerBlack V Neck T Shirt</a></h6>
-                            <div class="price">
-                                <div>$13.50 <span class="label-tags"><span class="label label-primary arrowed">-10%</span></span></div>
-                                <span class="price-old">$15.00</span>
-                            </div>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <a href="#">(5 reviews)</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-product-outer">
-                        <div class="box-product">
-                            <div class="img-wrapper">
-                                <a href="detail.html">
-                                    <img alt="Product" src="/images/demo/vneck4.jpg">
-                                </a>
-                                <div class="tags">
-                                    <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
-                                    <span class="label-tags"><span class="label label-info arrowed">Collection</span></span>
-                                </div>
-                                <div class="option">
-                                    <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                            <h6><a href="detail.html">Tagd New YorkGrey Printed V Neck T-Shirts</a></h6>
-                            <div class="price">
-                                <div>$13.50 <span class="label-tags"><span class="label label-default arrowed">-10%</span></span></div>
-                                <span class="price-old">$15.00</span>
-                            </div>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <a href="#">(5 reviews)</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-product-outer">
-                        <div class="box-product">
-                            <div class="img-wrapper">
-                                <a href="detail.html">
-                                    <img alt="Product" src="/images/demo/vneck1.jpg">
-                                </a>
-                                <div class="tags">
-                                    <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
-                                    <span class="label-tags"><span class="label label-default arrowed">Collection</span></span>
-                                </div>
-                                <div class="option">
-                                    <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                            <h6><a href="detail.html">PhosphorusGrey Melange Printed V Neck T-Shirt</a></h6>
-                            <div class="price">
-                                <div>$13.50 <span class="label-tags"><span class="label label-danger arrowed">-10%</span></span></div>
-                                <span class="price-old">$15.00</span>
-                            </div>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <a href="#">(5 reviews)</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="box-product-outer">
-                        <div class="box-product">
-                            <div class="img-wrapper">
-                                <a href="detail.html">
-                                    <img alt="Product" src="/images/demo/vneck2.jpg">
-                                </a>
-                                <div class="tags">
-                                    <span class="label-tags"><span class="label label-danger arrowed">Sale</span></span>
-                                    <span class="label-tags"><span class="label label-primary arrowed">Collection</span></span>
-                                </div>
-                                <div class="option">
-                                    <a href="#" data-toggle="tooltip" title="Add to Cart"><i class="fa fa-gavel"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Compare"><i class="fa fa-align-left"></i></a>
-                                    <a href="#" data-toggle="tooltip" title="Add to Wishlist" class="wishlist"><i class="fa fa-heart"></i></a>
-                                </div>
-                            </div>
-                            <h6><a href="detail.html">United Colors of BenettonNavy Blue Solid V Neck T Shirt</a></h6>
-                            <div class="price">
-                                <div>$13.50 <span class="label-tags"><span class="label label-success arrowed">-10%</span></span></div>
-                                <span class="price-old">$15.00</span>
-                            </div>
-                            <div class="rating">
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star"></i>
-                                <i class="fa fa-star-half-o"></i>
-                                <i class="fa fa-star-o"></i>
-                                <a href="#">(5 reviews)</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Collection -->
-
+            <!-- Top5HOt -->
+            <div class="title m-t-2"><span>Sản phẩm có nhiều lượt đấu giá nhất</span></div>
+            <div class="product-slider owl-controls-top-offset">
+                @Html.Action("Top5Hot", "Home")
             </div>
+            <!-- End Top5HOt -->
+
+        </div>
+        <div class="row">
+            <div class="clearfix visible-sm visible-xs"></div>
+
+            <!-- Top5HOt -->
+            <div class="title m-t-2"><span>Top 5 sản phẩm có giá cao nhất</span></div>
+            <div class="product-slider owl-controls-top-offset">
+                @Html.Action("Top5Highest", "Home")
+            </div>
+            <!-- End Top5HOt -->
+
+        </div>
+        <div class="row">
+            <div class="clearfix visible-sm visible-xs"></div>
+
+            <!-- Top5HOt -->
+            <div class="title m-t-2"><span>Top 5 sản phẩm sắp hết hạn</span></div>
+            <div class="product-slider owl-controls-top-offset">
+                @Html.Action("Top5TimeEnd", "Home")
+            </div>
+            <!-- End Top5HOt -->
+
+        </div>
 
         </div>
 
         <!-- Brand & Clients -->
-        <div class="row">
+        @*<div class="row">
             <div class="col-xs-12 m-t-1">
                 <div class="title text-center"><span>Brand & Clients</span></div>
                 <div class="brand-slider owl-controls-top-offset">
@@ -442,7 +210,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>*@
         <!-- End Brand & Clients -->
 
     </div>

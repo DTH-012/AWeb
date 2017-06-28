@@ -21,8 +21,9 @@ namespace DoAn_Auction.Models
         public string f_Email { get; set; }
         public Nullable<System.DateTime> f_DOB { get; set; }
         public Nullable<int> f_Level { get; set; }
-        public Nullable<int> f_Rate { get; set; }
         public string f_Address { get; set; }
         public string f_Phone { get; set; }
+        public Nullable<int> f_Like { get; set; }
+        public Nullable<int> f_Dislike { get; set; }
     }
 }

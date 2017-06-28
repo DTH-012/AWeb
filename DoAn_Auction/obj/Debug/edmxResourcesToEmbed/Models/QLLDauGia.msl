@@ -1,28 +1,85 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="QLDauGiaModelStoreContainer" CdmEntityContainer="QLDauGiaEntities">
-    <EntitySetMapping Name="Users">
-      <EntityTypeMapping TypeName="QLDauGiaModel.User">
-        <MappingFragment StoreEntitySet="Users">
-          <ScalarProperty Name="f_Phone" ColumnName="f_Phone" />
-          <ScalarProperty Name="f_Address" ColumnName="f_Address" />
-          <ScalarProperty Name="f_ID" ColumnName="f_ID" />
-          <ScalarProperty Name="f_Username" ColumnName="f_Username" />
-          <ScalarProperty Name="f_Password" ColumnName="f_Password" />
-          <ScalarProperty Name="f_Name" ColumnName="f_Name" />
-          <ScalarProperty Name="f_Email" ColumnName="f_Email" />
-          <ScalarProperty Name="f_DOB" ColumnName="f_DOB" />
-          <ScalarProperty Name="f_Level" ColumnName="f_Level" />
-          <ScalarProperty Name="f_Rate" ColumnName="f_Rate" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="Categories">
       <EntityTypeMapping TypeName="QLDauGiaModel.Category">
         <MappingFragment StoreEntitySet="Categories">
           <ScalarProperty Name="ParentID" ColumnName="ParentID" />
           <ScalarProperty Name="CatName" ColumnName="CatName" />
           <ScalarProperty Name="CatID" ColumnName="CatID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Reviews">
+      <EntityTypeMapping TypeName="QLDauGiaModel.Review">
+        <MappingFragment StoreEntitySet="Reviews">
+          <ScalarProperty Name="Receiver" ColumnName="Receiver" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Reviewer" ColumnName="Reviewer" />
+          <ScalarProperty Name="ProID" ColumnName="ProID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RegisterSellings">
+      <EntityTypeMapping TypeName="QLDauGiaModel.RegisterSelling">
+        <MappingFragment StoreEntitySet="RegisterSelling">
+          <ScalarProperty Name="DateSend" ColumnName="DateSend" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="DateEnd" ColumnName="DateEnd" />
+          <ScalarProperty Name="DateStart" ColumnName="DateStart" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Favorites">
+      <EntityTypeMapping TypeName="QLDauGiaModel.Favorite">
+        <MappingFragment StoreEntitySet="Favorites">
+          <ScalarProperty Name="ProID" ColumnName="ProID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DesBonus">
+      <EntityTypeMapping TypeName="QLDauGiaModel.DesBonu">
+        <MappingFragment StoreEntitySet="DesBonus">
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="DesBonus" ColumnName="DesBonus" />
+          <ScalarProperty Name="ProID" ColumnName="ProID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="QLDauGiaModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="f_Dislike" ColumnName="f_Dislike" />
+          <ScalarProperty Name="f_Like" ColumnName="f_Like" />
+          <ScalarProperty Name="f_Phone" ColumnName="f_Phone" />
+          <ScalarProperty Name="f_Address" ColumnName="f_Address" />
+          <ScalarProperty Name="f_Level" ColumnName="f_Level" />
+          <ScalarProperty Name="f_DOB" ColumnName="f_DOB" />
+          <ScalarProperty Name="f_Email" ColumnName="f_Email" />
+          <ScalarProperty Name="f_Name" ColumnName="f_Name" />
+          <ScalarProperty Name="f_Password" ColumnName="f_Password" />
+          <ScalarProperty Name="f_Username" ColumnName="f_Username" />
+          <ScalarProperty Name="f_ID" ColumnName="f_ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AuctionHistories">
+      <EntityTypeMapping TypeName="QLDauGiaModel.AuctionHistory">
+        <MappingFragment StoreEntitySet="AuctionHistories">
+          <ScalarProperty Name="PriceHighest" ColumnName="PriceHighest" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="ProID" ColumnName="ProID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -46,17 +103,6 @@
           <ScalarProperty Name="FullDes" ColumnName="FullDes" />
           <ScalarProperty Name="ProName" ColumnName="ProName" />
           <ScalarProperty Name="ProID" ColumnName="ProID" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="AuctionHistories">
-      <EntityTypeMapping TypeName="QLDauGiaModel.AuctionHistory">
-        <MappingFragment StoreEntitySet="AuctionHistories">
-          <ScalarProperty Name="Time" ColumnName="Time" />
-          <ScalarProperty Name="Price" ColumnName="Price" />
-          <ScalarProperty Name="UserID" ColumnName="UserID" />
-          <ScalarProperty Name="ProID" ColumnName="ProID" />
-          <ScalarProperty Name="ID" ColumnName="ID" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

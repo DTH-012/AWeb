@@ -18,11 +18,11 @@ namespace DoAn_Auction.Helpers
             return ret;
 
         }
-	public static string MaHoa(string strInput)
+        public static string MaHoa(string strInput)
         {
             string eName = null;
             string tmp = strInput;
-            if (strInput == null)
+            if(strInput==null)
             {
                 return eName;
             }

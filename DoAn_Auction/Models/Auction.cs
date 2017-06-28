@@ -17,19 +17,19 @@ namespace DoAn_Auction.Models
         public int ProID { get; set; }
         public string ProName { get; set; }
         public string FullDes { get; set; }
-        public Nullable<decimal> PriceStarting { get; set; }
-        public Nullable<decimal> PriceBuy { get; set; }
-        public Nullable<int> CatID { get; set; }
-        public Nullable<decimal> PriceHighest { get; set; }
-        public Nullable<int> Customer { get; set; }
-        public Nullable<System.DateTime> TimeStart { get; set; }
-        public Nullable<System.DateTime> TimeEnd { get; set; }
-        public Nullable<bool> Adjourning { get; set; }
-        public Nullable<bool> Status { get; set; }
-        public Nullable<int> Required { get; set; }
-        public Nullable<decimal> Step { get; set; }
-        public Nullable<int> Seller { get; set; }
-        public Nullable<int> Quantity { get; set; }
-        public Nullable<decimal> PriceCurrent { get; set; }
+        public decimal PriceStarting { get; set; }
+        public decimal PriceBuy { get; set; }
+        public int CatID { get; set; }
+        public decimal PriceHighest { get; set; }
+        public int Customer { get; set; }
+        public System.DateTime TimeStart { get; set; }
+        public System.DateTime TimeEnd { get; set; }
+        public bool Adjourning { get; set; }
+        public bool Status { get; set; }
+        public int Required { get; set; }
+        public decimal Step { get; set; }
+        public int Seller { get; set; }
+        public int Quantity { get; set; }
+        public decimal PriceCurrent { get; set; }
     }
 }

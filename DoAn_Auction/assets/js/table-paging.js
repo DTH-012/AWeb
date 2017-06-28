@@ -103,6 +103,6 @@
 
 $(document).ready(function () {
 
-    $('#myTable').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage:8 });
+    $('#myTabl').pageMe({ pagerSelector: '#myPager', showPrevNext: true, hidePageNumbers: false, perPage:8 });
 
 });
